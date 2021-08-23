@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch {
             val extole = initExtoleSdk(this@MainActivity)
             extole.event("mobile_view", mapOf(Pair("partner_user_id", "123")))
-            loadCreative(extole)
+            loadShareExperience(extole)
             configureNativeSharingButton(extole)
 
             runOnUiThread {
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun loadCreative(extole: Extole) {
+    fun loadShareExperience(extole: Extole) {
         val menuItem: Button = findViewById(R.id.menu_item)
         val copyright: TextView = findViewById(R.id.copyright)
         menuItem.text = extole.getText("calls_to_action.menu.message")
