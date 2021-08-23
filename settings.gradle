@@ -1,0 +1,19 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        // TODO to be replaced by Github Packages ENG-15109
+        maven {
+            url "http://artifactory.tools.intole.net/artifactory/extole-packages/api-stubs"
+            allowInsecureProtocol true
+        }
+        // TODO to be replaced by Github Packages ENG-15109
+        maven {
+            url "http://artifactory.tools.intole.net/artifactory/extole-packages/"
+            allowInsecureProtocol true
+        }
+    }
+}
+rootProject.name = "Android SDK"
+include ':app'

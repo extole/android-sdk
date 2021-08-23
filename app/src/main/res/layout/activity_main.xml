@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+  tools:context="com.extole.androidsdk.MainActivity">
+
+    <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+          android:background="@android:color/white"
+          android:textColor="@android:color/black"
+          android:text="Native Share"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/native_share" />
+
+        <Button
+          android:background="@android:color/white"
+          android:textColor="@android:color/black"
+          android:text="Menu Item"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/menu_item" />
+
+        <ImageView
+          android:layout_width="match_parent"
+          android:layout_height="169dp"
+          android:id="@+id/share_image" />
+
+        <EditText
+          android:background="@android:color/white"
+          android:textColor="@android:color/black"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:inputType="textEmailAddress"
+          android:ems="10"
+          android:id="@+id/email_address"
+          android:hint="Enter email" />
+
+        <EditText
+          android:background="@android:color/white"
+          android:textColor="@android:color/black"
+          android:layout_width="match_parent"
+          android:layout_height="104dp"
+          android:inputType="textMultiLine"
+          android:ems="10"
+          android:id="@+id/email_message"
+          android:hint="Share message"
+          android:lines="8"
+          android:minLines="6"
+          android:gravity="top|left"
+          android:maxLines="10"
+          android:scrollbars="vertical"
+          android:singleLine="false" />
+
+        <Button
+          android:background="@android:color/white"
+          android:textColor="@android:color/black"
+          android:text="Email Share"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/email_share" />
+
+        <TextView
+          android:text="TextView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/copyright" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
