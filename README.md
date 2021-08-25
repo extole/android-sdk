@@ -43,5 +43,6 @@ Demo application is very simple, it shows basic operations like:
 - getting a resource (text or url) from your configured Extole Creative
 - native sharing
 
-Screenshot: 
+Screenshot:
 
+<img src="https://user-images.githubusercontent.com/304224/130804856-ee7b5404-4a8d-4975-ad17-85cc0bf6e253.png" width="550">
