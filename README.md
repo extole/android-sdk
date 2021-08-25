@@ -24,23 +24,31 @@ val extole = Extole.Builder("https://extole-monitor-android.extole.io/")
 ### Sending events
 
 ```
-extole.event("purchase", mapOf(Pair("partner_user_id", "123"), Pair("cart_value", "120.3")))
+extole.event("purchase", mapOf(Pair("partner_user_id", "123"), Pair("cart_value", "120.30")))
 ```
 
-### Get a text configured in your Extole Creative
+### Get marketer configured campaign attributes
 
 ```
 val emailShareMessage = extole.getText("sharing.email.message")
 ```
 
-### Sharing via Email
+### Sharing via Email through Extole
 
 ```
 val eventId = extole.emailShare("shareToEmailAddress", emailShareMessage)
 ```
 
+### Native Sharing
+
+```
+extole.nativeShare("title", "shareMessage")
+```
+
 ## Demo application
+
 Demo application is very simple, it shows basic operations like:
+
 - sending an event
 - email share
 - getting a resource (text or url) from your configured Extole Creative
