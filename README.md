@@ -4,6 +4,9 @@
 
 1. Clone this repository
 2. Open it with Android Studio
+3. Run it in a simulator or real device
+
+Note: dependencies for this project are not published to a public repository at this moment.
 
 ## Using Extole SDK
 
@@ -45,4 +48,4 @@ Demo application is very simple, it shows basic operations like:
 
 Screenshot:
 
-<img src="https://user-images.githubusercontent.com/304224/130804856-ee7b5404-4a8d-4975-ad17-85cc0bf6e253.png" width="550">
+<img src="https://user-images.githubusercontent.com/304224/130804856-ee7b5404-4a8d-4975-ad17-85cc0bf6e253.png" width="150">
