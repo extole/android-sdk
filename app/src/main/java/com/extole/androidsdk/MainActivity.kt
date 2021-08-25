@@ -22,10 +22,9 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch {
             val extole = initExtoleSdk(this@MainActivity)
             extole.event("mobile_view", mapOf(Pair("partner_user_id", "123")))
-            loadShareExperience(extole)
-            configureNativeSharingButton(extole)
-
             runOnUiThread {
+                loadShareExperience(extole)
+                configureNativeSharingButton(extole)
                 val shareImage: ImageView = findViewById(R.id.share_image)
                 Picasso.get().load(Uri.parse(extole.getText("sharing.facebook.image"))).into(shareImage);
             }
