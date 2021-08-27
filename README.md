@@ -1,5 +1,15 @@
 # Extole Android SDK
 
+This app gives examples of how to code:
+- sending an event to Extole
+- get a resource (text, url, data) describing a marketing campaign configured in Extole
+- share via email through Extole
+- share using Android native share
+
+Screenshot:
+
+[<img src="https://user-images.githubusercontent.com/304224/130804856-ee7b5404-4a8d-4975-ad17-85cc0bf6e253.png" width="150">](https://github.com/extole/android-sdk/blob/master/app/src/main/java/com/extole/androidsdk/MainActivity.kt)
+
 ## Setup
 
 1. Clone this repository
@@ -8,17 +18,17 @@
 
 Note: dependencies for this project are not published to a public repository at this moment.
 
-## Using Extole SDK
+## Using the Extole SDK
 
 ### Initializing
 
 ```
 val extole = Extole.Builder("https://extole-monitor-android.extole.io/")
-            .withAppName("extole-mobile-test")
-            .addAppData("version", "1.0")
-            .withSandbox("prod-test")
-            .withDebugEnabled(true)
-            .build()
+    .withAppName("extole-mobile-test")
+    .addAppData("version", "1.0")
+    .withSandbox("prod-test")
+    .withDebugEnabled(true)
+    .build()
 ```
 
 ### Sending events
@@ -44,16 +54,3 @@ val eventId = extole.emailShare("shareToEmailAddress", emailShareMessage)
 ```
 extole.nativeShare("title", "shareMessage")
 ```
-
-## Demo application
-
-Demo application is very simple, it shows basic operations like:
-
-- sending an event
-- email share
-- getting a resource (text or url) from your configured Extole Creative
-- native sharing
-
-Screenshot:
-
-<img src="https://user-images.githubusercontent.com/304224/130804856-ee7b5404-4a8d-4975-ad17-85cc0bf6e253.png" width="150">
