@@ -1,7 +1,7 @@
 # Extole Android SDK
 
-This app gives examples of how to code:
-- sending an event to Extole
+This app provides source code examples of how to:
+- send an event to Extole
 - get a resource (text, url, data) describing a marketing campaign configured in Extole
 - share via email through Extole
 - share using Android native share
