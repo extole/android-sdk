@@ -58,14 +58,11 @@ We recommend that you keep a reference to the `extole` and share it between acti
 
 ```
 val extole = Extole.builder()
-        .withPersistance(SharedPreferencesPersistance(context))
-        .withAppName("YOUR-APPLICATION-NAME")
-        .addData("version", "1.0")
-        .withSandbox("prod-prod")
-        .withDebugEnabled(true)
-        .addLabel("refer-a-friend")
-        .withContext(context)
-        .build()
+    .withPersistance(SharedPreferencesPersistance(context))
+    .withAppName("YOUR-APPLICATION-NAME")
+    .addData("version", "1.0")
+    .withDebugEnabled(true)
+    .build()
 ```
 
 ### Rendering content for a menu item example
@@ -80,6 +77,8 @@ GlobalScope.launch {
     }
 }
 ```
+
+This example assumes you have configured the 'promotional_menu' zone with 'menu_text' in Extole.
 
 ### WebView example
 
@@ -115,7 +114,8 @@ GlobalScope.launch {
 }
 ```
 
-In case you are rendering content that supports Native Sharing, we will take care of sending share events to Extole.
+A webview is a convenient way to support a rich campiagn experience, while minimizing mobile development. Extole,
+supports tracking important events in the webview, like tracking native sharing events.
 
 ### Sending events
 
