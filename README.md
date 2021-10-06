@@ -20,37 +20,114 @@ Note: dependencies for this project are not published to a public repository at 
 
 ## Using the Extole SDK
 
-### Initializing
+### Repository
+
+To your project `build.gradle` under the `repositories` configuration, add:
 
 ```
-val extole = Extole.Builder("https://extole-monitor-android.extole.io/")
-    .withAppName("extole-mobile-test")
-    .addAppData("version", "1.0")
-    .withSandbox("prod-test")
-    .withDebugEnabled(true)
-    .build()
+maven {
+    name "github"
+    url "https://maven.pkg.github.com/extole/android-sdk"
+}
 ```
+
+### Dependencies
+
+On your application `build.gradle` file Add a dependency on `Extole Android SDK`:
+
+```
+implementation 'com.extole.mobile:android-sdk:1.0.0'
+```
+
+### Project configuration
+
+Modify `AndroidManifest.xml`, add:
+
+```
+<meta-data
+  android:name="com.extole.PROGRAM_DOMAIN"
+  android:value="YOUR_PROGRAM_DOMAIN" />
+
+<receiver
+  android:name=".android.sdk.impl.ExtoleShareBroadcastReceiver"
+  android:exported="false" />
+```
+
+### Initializing SDK
+We recommend that you keep a reference to the `extole` and share it between activities.
+
+```
+val extole = Extole.builder()
+        .withPersistance(SharedPreferencesPersistance(context))
+        .withAppName("YOUR-APPLICATION-NAME")
+        .addData("version", "1.0")
+        .withSandbox("prod-prod")
+        .withDebugEnabled(true)
+        .addLabel("refer-a-friend")
+        .withContext(context)
+        .build()
+```
+
+### Rendering content for a menu item example
+
+```
+GlobalScope.launch {
+    val (zone, campaign) = extole.getZone("promotional_menu")
+    runOnUiThread {
+        findViewById<EditText>(R.id.promotional_menu_item).setText(
+            zone.get("menu_text").toString(), TextView.BufferType.NORMAL
+        )
+    }
+}
+```
+
+### WebView example
+
+```
+GlobalScope.launch {
+    val (zone, campaign) = extole.getZone("promotional_menu")
+    runOnUiThread {
+        val menuItemButton = findViewById<Button>(R.id.menu_item_button)
+        menuItemButton.text = zone.get("menu_item_text").toString()
+        menuItemButton.setOnClickListener {
+            val intent = Intent(this@Activity, WebViewActivity::class.java)
+            intent.putExtra("webViewItem", menuItemButton.get("webViewItem").toString())
+            startActivity(intent)
+        }
+    }
+}
+```
+
+Where `WebViewActivity` layout contains a `WebView` and when Activity is initilized we are doing:
+
+```
+val extras = intent.extras
+val webViewItem = extras!!.getString("webViewItem").orEmpty()
+
+val webView = findViewById<WebView>(R.id.webview)
+val context: Context = this
+GlobalScope.launch {
+    val webViewBuilder = extole.webViewBuilder(webView)
+    runOnUiThread {
+        val extoleWebView = webViewBuilder.create()
+        extoleWebView.load(shareZoneName)
+    }
+}
+```
+
+In case you are rendering content that supports Native Sharing, we will take care of sending share events to Extole.
 
 ### Sending events
 
 ```
-extole.event("purchase", mapOf(Pair("partner_user_id", "123"), Pair("cart_value", "120.30")))
-```
-
-### Get marketer configured campaign attributes
-
-```
-val emailShareMessage = extole.getText("sharing.email.message")
+extole.sendEvent("purchase", mapOf("partner_user_id" to "123", "cart_value" to "120.30"))
 ```
 
 ### Sharing via Email through Extole
 
 ```
-val eventId = extole.emailShare("shareToEmailAddress", emailShareMessage)
-```
-
-### Native Sharing
-
-```
-extole.nativeShare("title", "shareMessage")
+ GlobalScope.launch {
+    val (_, campaign) = extole.getZone("promotional_email")
+    campaign.emailShare(recipient, subject, message);
+}
 ```
