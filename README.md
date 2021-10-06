@@ -60,12 +60,13 @@ We recommend that you keep a reference to the `extole` and share it between acti
 val extole = Extole.builder()
     .withPersistance(SharedPreferencesPersistance(context))
     .withAppName("YOUR-APPLICATION-NAME")
-    .addData("version", "1.0")
-    .withDebugEnabled(true)
+    .addData("version", "YOUR-APPLICATION-VERSION")
     .build()
 ```
 
 ### Rendering content for a menu item example
+
+Allowing the marketer to manage the call to action messaging to align with the marketing campaign.
 
 ```
 GlobalScope.launch {
@@ -81,6 +82,9 @@ GlobalScope.launch {
 This example assumes you have configured the 'promotional_menu' zone with 'menu_text' in Extole.
 
 ### WebView example
+
+A webview is a convenient way to support a rich campaign experience, while minimizing mobile development. Extole,
+supports tracking important events in the webview, like tracking native sharing events.
 
 ```
 GlobalScope.launch {
@@ -109,18 +113,18 @@ GlobalScope.launch {
     val webViewBuilder = extole.webViewBuilder(webView)
     runOnUiThread {
         val extoleWebView = webViewBuilder.create()
-        extoleWebView.load(shareZoneName)
+        extoleWebView.load("microsite")
     }
 }
 ```
 
-A webview is a convenient way to support a rich campiagn experience, while minimizing mobile development. Extole,
-supports tracking important events in the webview, like tracking native sharing events.
+This example assumes you have configured a 'microsite' zone to server content.
+
 
 ### Sending events
 
 ```
-extole.sendEvent("purchase", mapOf("partner_user_id" to "123", "cart_value" to "120.30"))
+extole.sendEvent("purchase", mapOf("order_id" to "123", "cart_value" to "120.30"))
 ```
 
 ### Sharing via Email through Extole
