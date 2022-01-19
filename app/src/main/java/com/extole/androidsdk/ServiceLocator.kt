@@ -13,16 +13,11 @@ object ServiceLocator {
             return extoleSdk!!
         }
 
-        // singleton init to be fixed
         extoleSdk = Extole.init(
             context = context, appName = "extole-mobile-test", data = mapOf("version" to "1.0"),
             sandbox = "prod-test", debugEnabled = true, labels = setOf("business")
         )
 
         return extoleSdk!!
-    }
-
-    fun setExtole(extole: Extole) {
-        this.extoleSdk = extole
     }
 }
