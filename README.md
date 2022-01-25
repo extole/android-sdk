@@ -15,6 +15,7 @@ Screenshot:
 1. Clone this repository
 2. Open it with Android Studio
 3. Run it in a simulator or real device
+4. Declare ENV variables `GITHUB_USER` and `GITHUB_PERSONAL_ACCESS_TOKEN` for more details refer to: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry
 
 Note: dependencies for this project are not published to a public repository at this moment.
 
