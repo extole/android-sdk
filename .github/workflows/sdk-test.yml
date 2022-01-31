@@ -21,6 +21,9 @@ jobs:
 
     - name: Run Android SDK tests
       uses: reactivecircus/android-emulator-runner@v2
+      env:
+        GITHUB_USER: ${{ github.actor }}
+        GITHUB_PERSONAL_ACCESS_TOKEN: ${{ github.token }}
       with:
         api-level: 29
         disable-animations: true
