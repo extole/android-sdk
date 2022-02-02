@@ -31,7 +31,7 @@ class SdkTest {
         uiDevice.pressHome()
 
         val launcherPackage: String = uiDevice.launcherPackageName
-        Assertions.assertThat(launcherPackage).isNotNull
+        assertThat(launcherPackage).isNotNull
         uiDevice.wait(
             Until.hasObject(By.pkg(launcherPackage).depth(0)),
             LAUNCH_TIMEOUT
