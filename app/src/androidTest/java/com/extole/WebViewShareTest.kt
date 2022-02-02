@@ -17,6 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.concurrent.TimeUnit
 
+@Ignore
 @RunWith(AndroidJUnit4::class)
 class WebViewShareTest {
 
@@ -61,7 +62,6 @@ class WebViewShareTest {
         )
     }
 
-    @Ignore
     @Test
     fun testSharingIsHandledByProtocolHandlersWhenUsingSms() {
         whenUserOpensShareExperience()
