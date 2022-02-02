@@ -12,6 +12,7 @@ import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.concurrent.TimeUnit
@@ -60,6 +61,7 @@ class WebViewShareTest {
         )
     }
 
+    @Ignore
     @Test
     fun testSharingIsHandledByProtocolHandlersWhenUsingSms() {
         whenUserOpensShareExperience()
