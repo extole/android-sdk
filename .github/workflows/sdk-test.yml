@@ -25,9 +25,9 @@ jobs:
         GITHUB_USER: ${{ github.actor }}
         GITHUB_PERSONAL_ACCESS_TOKEN: ${{ github.token }}
       with:
-        api-level: 29
+        api-level: 31
         disable-animations: true
         arch: x86_64
-        profile: pixel_4_xl
+        profile: pixel_xl
         emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot-save -noaudio -no-boot-anim
         script: ./gradlew clean detekt connectedAndroidTest --no-daemon --stacktrace
