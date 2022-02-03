@@ -9,7 +9,7 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
-import org.assertj.core.api.Assertions
+import com.extole.androidsdk.BuildConfig
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -21,7 +21,7 @@ class SdkTest {
     private lateinit var uiDevice: UiDevice
 
     companion object {
-        private const val EXTOLE_APP_PACKAGE = "com.extole.androidsdk"
+        private const val EXTOLE_APP_PACKAGE = BuildConfig.APPLICATION_ID
         private const val LAUNCH_TIMEOUT = 5000L
     }
 

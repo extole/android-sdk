@@ -10,19 +10,18 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
+import com.extole.androidsdk.BuildConfig
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.concurrent.TimeUnit
 
-@Ignore
 @RunWith(AndroidJUnit4::class)
 class WebViewShareTest {
 
     companion object {
-        private const val EXTOLE_APP_PACKAGE = "com.extole.androidsdk"
+        private const val EXTOLE_APP_PACKAGE = BuildConfig.APPLICATION_ID
         private const val LAUNCH_TIMEOUT = 5000L
         private const val WAIT_FOR_ELEMENT_TIMEOUT_SECONDS = 5L
         private const val MAX_EMAIL_LENGTH = 220
