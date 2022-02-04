@@ -1,3 +1,5 @@
+[![Android SDK tests](https://github.com/extole/android/actions/workflows/sdk-test.yml/badge.svg?branch=master&event=schedule)](https://github.com/extole/android/actions/workflows/sdk-test.yml)
+
 # Extole Android SDK
 
 This app provides source code examples of how to:
