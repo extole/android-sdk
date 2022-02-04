@@ -3,7 +3,7 @@ name: Run Android SDK tests
 on:
   workflow_dispatch:
   push:
-    branches: [ "ENG-16266" ]
+    branches: [ "master" ]
 
 jobs:
   run_sdk_tests:
