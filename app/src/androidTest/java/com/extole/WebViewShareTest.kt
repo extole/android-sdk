@@ -85,10 +85,11 @@ class WebViewShareTest {
 
     private fun smsShareDialogIsDisplayed() {
         val smsDialogTitle: UiObject = uiDevice.findObject(
-            UiSelector().text("New conversation")
+            UiSelector().text("To")
         )
         smsDialogTitle.waitForExists(TimeUnit.SECONDS.toMillis(WAIT_FOR_ELEMENT_TIMEOUT_SECONDS))
-        assertThat(smsDialogTitle.exists()).isTrue
+        assertThat(smsDialogTitle.exists())
+            .withFailMessage("Failed to find SMS Dialog title").isTrue
     }
 
     private fun andClicksOn(elementText: String) {
@@ -96,7 +97,8 @@ class WebViewShareTest {
             UiSelector().text(elementText)
         )
         element.waitForExists(TimeUnit.SECONDS.toMillis(WAIT_FOR_ELEMENT_TIMEOUT_SECONDS))
-        assertThat(element.exists()).isTrue
+        assertThat(element.exists())
+            .withFailMessage("Failed to find element: $elementText").isTrue
         element.click()
     }
 
