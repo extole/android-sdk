@@ -10,6 +10,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
+import com.extole.androidsdk.BuildConfig
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -20,9 +21,9 @@ import java.util.concurrent.TimeUnit
 class WebViewShareTest {
 
     companion object {
-        private const val EXTOLE_APP_PACKAGE = "com.extole.androidsdk"
+        private const val EXTOLE_APP_PACKAGE = BuildConfig.APPLICATION_ID
         private const val LAUNCH_TIMEOUT = 5000L
-        private const val WAIT_FOR_ELEMENT_TIMEOUT_SECONDS = 5L
+        private const val WAIT_FOR_ELEMENT_TIMEOUT_SECONDS = 10L
         private const val MAX_EMAIL_LENGTH = 220
         private val MAILBOX_ID: String = "gezt5tev"
         private val EMAIL_DOMAIN = MAILBOX_ID + "@mailosaur.io"
@@ -84,10 +85,11 @@ class WebViewShareTest {
 
     private fun smsShareDialogIsDisplayed() {
         val smsDialogTitle: UiObject = uiDevice.findObject(
-            UiSelector().text("New conversation")
+            UiSelector().text("To")
         )
         smsDialogTitle.waitForExists(TimeUnit.SECONDS.toMillis(WAIT_FOR_ELEMENT_TIMEOUT_SECONDS))
-        assertThat(smsDialogTitle.exists()).isTrue
+        assertThat(smsDialogTitle.exists())
+            .withFailMessage("Failed to find SMS Dialog title").isTrue
     }
 
     private fun andClicksOn(elementText: String) {
@@ -95,7 +97,8 @@ class WebViewShareTest {
             UiSelector().text(elementText)
         )
         element.waitForExists(TimeUnit.SECONDS.toMillis(WAIT_FOR_ELEMENT_TIMEOUT_SECONDS))
-        assertThat(element.exists()).isTrue
+        assertThat(element.exists())
+            .withFailMessage("Failed to find element: $elementText").isTrue
         element.click()
     }
 
@@ -105,13 +108,14 @@ class WebViewShareTest {
         mainViewButton.click()
 
         val webView = uiDevice.findObject(UiSelector().resourceId("$EXTOLE_APP_PACKAGE:id/webview"))
-        webView.waitForExists(TimeUnit.SECONDS.toMillis(5))
+        webView.waitForExists(TimeUnit.SECONDS.toMillis(WAIT_FOR_ELEMENT_TIMEOUT_SECONDS))
 
         val shareExperience: UiObject = uiDevice.findObject(
             UiSelector().resourceId("extole-share-experience")
         )
         shareExperience.waitForExists(TimeUnit.SECONDS.toMillis(15))
-        scroll(100)
+        scroll(10)
+        scroll(10)
     }
 
     private fun scroll(steps: Int) {
@@ -157,13 +161,13 @@ class WebViewShareTest {
 
         val enterButton =
             uiDevice.findObject(UiSelector().text("Enter").className("android.widget.Button"))
-        enterButton.waitForExists(TimeUnit.SECONDS.toMillis(10))
+        enterButton.waitForExists(TimeUnit.SECONDS.toMillis(15))
         enterButton.click()
 
         val copyLink: UiObject = uiDevice.findObject(
             UiSelector().text("Copy link")
         )
-        copyLink.waitForExists(TimeUnit.SECONDS.toMillis(10))
+        copyLink.waitForExists(TimeUnit.SECONDS.toMillis(15))
     }
 
     fun getEmailAddress(prefix: String = "p"): String {
