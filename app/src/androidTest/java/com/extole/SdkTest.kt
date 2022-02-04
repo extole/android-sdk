@@ -23,6 +23,7 @@ class SdkTest {
     companion object {
         private const val EXTOLE_APP_PACKAGE = BuildConfig.APPLICATION_ID
         private const val LAUNCH_TIMEOUT = 5000L
+        private const val WAIT_ELEMENT_TIMEOUT = 5000L
     }
 
     @Before
@@ -58,11 +59,13 @@ class SdkTest {
     @Test
     fun testZoneContentIsCorrectlyLoadedWithExtole() {
         val copyrightElement =
-            uiDevice.findObject(UiSelector().resourceId("${EXTOLE_APP_PACKAGE}:id/copyright"))
-        assertThat(copyrightElement.text).startsWith("Your Company is great!")
+            uiDevice.findObject(UiSelector().textContains("Your Company is great!"))
+        copyrightElement.waitForExists(WAIT_ELEMENT_TIMEOUT)
+        assertThat(copyrightElement.exists()).isTrue
 
         val emailTextElement =
-            uiDevice.findObject(UiSelector().resourceId("${EXTOLE_APP_PACKAGE}:id/email_message"))
-        assertThat(emailTextElement.text).startsWith("I wanted to share")
+            uiDevice.findObject(UiSelector().textContains("I wanted to share"))
+        emailTextElement.waitForExists(WAIT_ELEMENT_TIMEOUT)
+        assertThat(emailTextElement.exists()).isTrue
     }
 }
