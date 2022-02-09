@@ -23,7 +23,7 @@ class WebViewShareTest {
     companion object {
         private const val EXTOLE_APP_PACKAGE = BuildConfig.APPLICATION_ID
         private const val LAUNCH_TIMEOUT = 5000L
-        private const val WAIT_FOR_ELEMENT_TIMEOUT_SECONDS = 10L
+        private const val WAIT_FOR_ELEMENT_TIMEOUT_SECONDS = 15L
         private const val MAX_EMAIL_LENGTH = 220
         private val MAILBOX_ID: String = "gezt5tev"
         private val EMAIL_DOMAIN = MAILBOX_ID + "@mailosaur.io"
@@ -113,7 +113,7 @@ class WebViewShareTest {
         val shareExperience: UiObject = uiDevice.findObject(
             UiSelector().resourceId("extole-share-experience")
         )
-        shareExperience.waitForExists(TimeUnit.SECONDS.toMillis(15))
+        shareExperience.waitForExists(TimeUnit.SECONDS.toMillis(20L))
         scroll(10)
         scroll(10)
     }
@@ -150,6 +150,7 @@ class WebViewShareTest {
         val emailPlaceholder = uiDevice.findObject(
             UiSelector().textContains("Your email")
         )
+        emailPlaceholder.waitForExists(TimeUnit.SECONDS.toMillis(WAIT_FOR_ELEMENT_TIMEOUT_SECONDS))
         val emailInput = emailPlaceholder.getFromParent(
             UiSelector()
                 .className("android.widget.EditText")
@@ -161,13 +162,13 @@ class WebViewShareTest {
 
         val enterButton =
             uiDevice.findObject(UiSelector().text("Enter").className("android.widget.Button"))
-        enterButton.waitForExists(TimeUnit.SECONDS.toMillis(15))
+        enterButton.waitForExists(TimeUnit.SECONDS.toMillis(20))
         enterButton.click()
 
         val copyLink: UiObject = uiDevice.findObject(
             UiSelector().text("Copy link")
         )
-        copyLink.waitForExists(TimeUnit.SECONDS.toMillis(15))
+        copyLink.waitForExists(TimeUnit.SECONDS.toMillis(20))
     }
 
     fun getEmailAddress(prefix: String = "p"): String {
