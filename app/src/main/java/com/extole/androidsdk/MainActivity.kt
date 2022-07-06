@@ -21,10 +21,19 @@ class MainActivity : AppCompatActivity() {
 
         GlobalScope.launch {
             extole = ServiceLocator.getExtole(this@MainActivity)
-            val (zone, campaign) = extole.getZone("apply_for_card")
+            val (zone, campaign) = extole.fetchZone("apply_for_card")
             runOnUiThread {
+
+                findViewById<Button>(R.id.native_share).setText(
+                    zone.get("menu.message").toString(), TextView.BufferType.NORMAL
+                )
+
                 findViewById<EditText>(R.id.email_message).setText(
                     zone.get("sharing.email.message").toString(), TextView.BufferType.NORMAL
+                )
+
+                findViewById<Button>(R.id.email_share).setText(
+                    zone.get("sharing.email.subject").toString(), TextView.BufferType.NORMAL
                 )
 
                 findViewById<TextView>(R.id.copyright).setText(
@@ -39,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             launch {
-                val customMenu1 = campaign.getZone("custom_menu_1")
+                val (customMenu1, _) = campaign.fetchZone("custom_menu_1")
                 runOnUiThread {
                     findViewById<Button>(R.id.menu_item).text =
                         customMenu1.get("message").toString()

@@ -19,7 +19,6 @@
         <Button
           android:background="@android:color/white"
           android:textColor="@android:color/black"
-          android:text="Native Share"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:id="@+id/native_share" />
@@ -27,7 +26,6 @@
         <Button
           android:background="@android:color/white"
           android:textColor="@android:color/black"
-          android:text="Menu Item"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:id="@+id/menu_item" />
@@ -44,8 +42,7 @@
           android:layout_height="wrap_content"
           android:inputType="textEmailAddress"
           android:ems="10"
-          android:id="@+id/email_address"
-          android:hint="Enter email" />
+          android:id="@+id/email_address" />
 
         <EditText
           android:background="@android:color/white"
@@ -55,7 +52,6 @@
           android:inputType="textMultiLine"
           android:ems="10"
           android:id="@+id/email_message"
-          android:hint="Share message"
           android:lines="8"
           android:minLines="6"
           android:gravity="top|left"
@@ -66,13 +62,11 @@
         <Button
           android:background="@android:color/white"
           android:textColor="@android:color/black"
-          android:text="Email Share"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:id="@+id/email_share" />
 
         <TextView
-          android:text="TextView"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:id="@+id/copyright" />

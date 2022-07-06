@@ -19,7 +19,7 @@
 
         <meta-data
           android:name="com.extole.PROGRAM_DOMAIN"
-          android:value="https://mobile-monitor.extole.io/" />
+          android:value="mobile-monitor.extole.io" />
 
         <activity
           android:name=".MainActivity"
