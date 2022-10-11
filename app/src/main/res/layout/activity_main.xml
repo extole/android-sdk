@@ -21,55 +21,20 @@
           android:textColor="@android:color/black"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:id="@+id/native_share" />
+          android:id="@+id/menu_item" />
 
         <Button
           android:background="@android:color/white"
           android:textColor="@android:color/black"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:id="@+id/menu_item" />
+          android:id="@+id/deeplink"
+          android:text="Send Deeplink Event" />
 
         <ImageView
           android:layout_width="match_parent"
           android:layout_height="169dp"
           android:id="@+id/share_image" />
-
-        <EditText
-          android:background="@android:color/white"
-          android:textColor="@android:color/black"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:inputType="textEmailAddress"
-          android:ems="10"
-          android:id="@+id/email_address" />
-
-        <EditText
-          android:background="@android:color/white"
-          android:textColor="@android:color/black"
-          android:layout_width="match_parent"
-          android:layout_height="104dp"
-          android:inputType="textMultiLine"
-          android:ems="10"
-          android:id="@+id/email_message"
-          android:lines="8"
-          android:minLines="6"
-          android:gravity="top|left"
-          android:maxLines="10"
-          android:scrollbars="vertical"
-          android:singleLine="false" />
-
-        <Button
-          android:background="@android:color/white"
-          android:textColor="@android:color/black"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/email_share" />
-
-        <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/copyright" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

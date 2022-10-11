@@ -10,12 +10,8 @@
       android:label="@string/app_name"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
+      android:name=".DemoApplication"
       android:theme="@style/Theme.AndroidSDK">
-        <activity
-          android:name=".WebViewActivity"
-          android:exported="true"
-          android:label="@string/title_activity_web_view"
-          android:theme="@style/Theme.AndroidSDK.NoActionBar" />
 
         <meta-data
           android:name="com.extole.PROGRAM_DOMAIN"
