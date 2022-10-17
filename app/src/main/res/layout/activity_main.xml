@@ -34,7 +34,7 @@
         <ImageView
           android:layout_width="match_parent"
           android:layout_height="169dp"
-          android:id="@+id/share_image" />
+          android:id="@+id/image_view" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
