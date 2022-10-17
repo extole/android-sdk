@@ -19,63 +19,22 @@
         <Button
           android:background="@android:color/white"
           android:textColor="@android:color/black"
-          android:text="Native Share"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/native_share" />
-
-        <Button
-          android:background="@android:color/white"
-          android:textColor="@android:color/black"
-          android:text="Menu Item"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:id="@+id/menu_item" />
 
-        <ImageView
-          android:layout_width="match_parent"
-          android:layout_height="169dp"
-          android:id="@+id/share_image" />
-
-        <EditText
-          android:background="@android:color/white"
-          android:textColor="@android:color/black"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:inputType="textEmailAddress"
-          android:ems="10"
-          android:id="@+id/email_address"
-          android:hint="Enter email" />
-
-        <EditText
-          android:background="@android:color/white"
-          android:textColor="@android:color/black"
-          android:layout_width="match_parent"
-          android:layout_height="104dp"
-          android:inputType="textMultiLine"
-          android:ems="10"
-          android:id="@+id/email_message"
-          android:hint="Share message"
-          android:lines="8"
-          android:minLines="6"
-          android:gravity="top|left"
-          android:maxLines="10"
-          android:scrollbars="vertical"
-          android:singleLine="false" />
-
         <Button
           android:background="@android:color/white"
           android:textColor="@android:color/black"
-          android:text="Email Share"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:id="@+id/email_share" />
+          android:id="@+id/deeplink"
+          android:text="Send Deeplink Event" />
 
-        <TextView
-          android:text="TextView"
+        <ImageView
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/copyright" />
+          android:layout_height="169dp"
+          android:id="@+id/image_view" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
