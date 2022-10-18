@@ -1,140 +1,235 @@
-[![Android SDK tests](https://github.com/extole/android/actions/workflows/sdk-test.yml/badge.svg?branch=master&event=schedule)](https://github.com/extole/android/actions/workflows/sdk-test.yml)
+# Android Integration
+This integration guide shows you how to set up and launch an Extole program as quickly as possible with our Android SDK.
 
-# Extole Android SDK
+## Requirements
+The Extole Android SDK supports minSdkVersion 21 or later.
 
-This app provides source code examples of how to:
-- send an event to Extole
-- get a resource (text, url, data) describing a marketing campaign configured in Extole
-- share via email through Extole
-- share using Android native share
-
-Screenshot:
-
-[<img src="https://user-images.githubusercontent.com/304224/130804856-ee7b5404-4a8d-4975-ad17-85cc0bf6e253.png" width="150">](https://github.com/extole/android-sdk/blob/master/app/src/main/java/com/extole/androidsdk/MainActivity.kt)
-
-## Setup
-
-1. Clone this repository
-2. Open it with Android Studio
-3. Run it in a simulator or real device
-4. Declare ENV variables `GITHUB_USER` and `GITHUB_PERSONAL_ACCESS_TOKEN` for more details refer to: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry
-
-Note: dependencies for this project are not published to a public repository at this moment.
-
-## Using the Extole SDK
-
-### Repository
-
-To your project `build.gradle` under the `repositories` configuration, add:
+## Add Extole’s Github repository and SDK library
+In the `settings.gradle` of your Android project, add Extole’s Github repository:
 
 ```
 maven {
-    name "github"
-    url "https://maven.pkg.github.com/extole/android-sdk"
+    name "Extole SDK Repository"
+    url "https://maven.pkg.github.com/extole/android"
+    credentials {
+        username = System.getenv('GITHUB_USER')
+        password = System.getenv('GITHUB_PERSONAL_ACCESS_TOKEN')
+    }
 }
 ```
 
-### Dependencies
-
-On your application `build.gradle` file Add a dependency on `Extole Android SDK`:
+_Github currently requires that you input your credentials to view public assets._
+In the `build.gradle` for your project add Extole’s SDK library:
 
 ```
-implementation 'com.extole.mobile:android-sdk:1.0.0'
+implementation 'com.extole.mobile:android-sdk:1.0.+'
 ```
 
-### Project configuration
+## Initialize Extole
 
-Modify `AndroidManifest.xml`, add:
+Initialize Extole. We recommend that you have a single instance of the Extole class:
 
+```
+Extole.init(context = context, appName = "your-app-name")
+
+```
+
+A test sandbox can also be used in the example above (i.e., sandbox = “production-test”). Be sure to replace `appName = "your-app-name"` with a name that describes your application so that you can easily find it later. Optionally, it’s useful to pass a version… ` data = {"version" to "1.0"}`
+Initialize global components. The following example uses the dependency injection framework [Dagger](https://dagger.dev/dev-guide/android.html):
+
+```
+@Module
+@InstallIn(SingletonComponent::class)
+class Configuration {
+    @Singleton
+    @Provides
+    fun extole(@ApplicationContext context: Context): Extole =
+        runBlocking(Dispatchers.IO) {
+            return@runBlocking Extole.init(
+                context = context, appName = "extole-mobile-test", data = mapOf("version" to "1.0"),
+                sandbox = "prod-test", labels = setOf("business"),
+                listenToEvents = true
+            )
+        }
+}
+```
+
+In the `AndroidManifest.xml` file, under the tag `&lt;application>&lt;/application>` add:
 ```
 <meta-data
   android:name="com.extole.PROGRAM_DOMAIN"
-  android:value="YOUR_PROGRAM_DOMAIN" />
-
-<receiver
-  android:name=".android.sdk.impl.ExtoleShareBroadcastReceiver"
-  android:exported="false" />
+  android:value="https://share.client.com/" />
 ```
+You need to use your program domain in order for the application to communicate with Extole.
 
-### Initializing SDK
-We recommend that you keep a reference to the `extole` and share it between activities.
+## Exchange data with Extole
+You can easily set up the SDK to send Extole information about your customers or members and the events they generate.  as well as to receive content from Extole.
 
-```
-val extole = Extole.builder()
-    .withPersistance(SharedPreferencesPersistance(context))
-    .withAppName("YOUR-APPLICATION-NAME")
-    .addData("version", "YOUR-APPLICATION-VERSION")
-    .build()
-```
-
-### Rendering content for a menu item example
-
-Allowing the marketer to manage the call to action messaging to align with the marketing campaign.
+### Customer Data
+Send Extole information about the customer:
 
 ```
-GlobalScope.launch {
-    val (zone, campaign) = extole.getZone("promotional_menu")
-    runOnUiThread {
-        findViewById<EditText>(R.id.promotional_menu_item).setText(
-            zone.get("menu_text").toString(), TextView.BufferType.NORMAL
-        )
-    }
+extole.identify(email, {"member_id" to "123"})
+```
+You can choose to pass any type of data to describe the customer. Richer data about your customers gives your marketing team the information they need to better segment your program participants and target them with appropriate campaigns.
+
+### Event Data
+Send Extole events, such as registers, signups, conversions, account openings, etc:
+```
+extole.sendEvent("my_event", {"key" to "values"})
+```
+For each event type, you can send additional data. For example, on a conversion event you may want to pass in order ID or order value and so on.
+
+### CTA Content
+CTAs such as mobile menu items can be fully customized in the My Extole Campaign Editor. Each CTA has a designated zone. The following code is an example of how to retrieve a CTA by fetching zone content:
+```
+val (zone, campaign) = extole.fetchZone("cta_prefetch")
+runOnUiThread {
+   findViewById<EditText>(R.id.cta_text)
+       .setText(zone?.get("text").toString(),TextView.BufferType.NORMAL)
+    findViewById<EditText>(R.id.cta_image)
+       .setText(zone?.get("image").toString(),TextView.BufferType.NORMAL)
+   zone.sendEvent("cta_clicked")
+}
+
+```
+
+## In order to be able to fetch the `cta` zone, the zone should be configured in My Extole and should return JSON content containing the `image` and `text`.
+Important note: We encourage you to pull CTA content from My Extole because doing so ensures that your menu item or overlay message will reflect the copy and offer you’ve configured for your campaign.
+
+## Advanced Usage
+The following topics cover advanced use cases for the Extole Android SDK. If you would like to explore any of these options, please reach out to our Support Team at support@extole.com.
+
+### Deeplink integration
+Completing a deep link integration is simple once you have integrated with a deep link provider, such as Branch. Send a mobile event to Extole, and based on the configuration of your mobile operations, our framework will execute the corresponding action.
+Deep link example:
+
+```
+DeepLinkListener { linkProperties, error ->
+  GlobalScope.launch {
+        ServiceLocator.getExtole(this@DeeplinkActivity)
+                extole.sendEvent("deeplink", linkProperties)
+  }
 }
 ```
+Extole will be able to react to this based on the Campaign configuration in[ ](http://my.extole.com/)My Extole.
 
-This example assumes you have configured the 'promotional_menu' zone with 'menu_text' in Extole.
-
-### WebView example
-
-A webview is a convenient way to support a rich campaign experience, while minimizing mobile development. Extole,
-supports tracking important events in the webview, like tracking native sharing events.
+### Configuring Actions from Events
+You can set up a specific action to occur when an event is fired. For example, when a customer taps on your menu item CTA, you may want the event to trigger an action that loads your microsite and shows the share experience.
+To set up this type of configuration, you will need to work with Extole Support to set up a zone in My Extole that returns JSON configurations with conditions and actions. The SDK executes actions for conditions that are passing for a specific event:
 
 ```
-GlobalScope.launch {
-    val (zone, campaign) = extole.getZone("promotional_menu")
-    runOnUiThread {
-        val menuItemButton = findViewById<Button>(R.id.menu_item_button)
-        menuItemButton.text = zone.get("menu_item_text").toString()
-        menuItemButton.setOnClickListener {
-            val intent = Intent(this@Activity, WebViewActivity::class.java)
-            intent.putExtra("webViewItem", menuItemButton.get("webViewItem").toString())
-            startActivity(intent)
+{
+  "operations": [
+    {
+      "conditions": [
+        {
+          "type": "EVENT",
+          "event_names": [
+            "cta_tap"
+          ]
         }
+      ],
+      "actions": [
+        {
+          "type": "VIEW_FULLSCREEN",
+          "zone_name": "microsite"
+        }
+      ]
     }
+  ]
 }
 ```
 
-Where `WebViewActivity` layout contains a `WebView` and when Activity is initilized we are doing:
+### Supported Actions
+The following types of actions are supported by default in our SDK.
+<table>
+  <tr>
+   <td><strong>Action Name</strong>
+   </td>
+   <td><strong>Description</strong>
+   </td>
+  </tr>
+  <tr>
+   <td><code>PROMPT</code>
+   </td>
+   <td>Display a pop-up notification native to iOS. For example, this could appear when a discount or coupon code has been successfully applied. 
+   </td>
+  </tr>
+  <tr>
+   <td><code>NATIVE_SHARING</code>
+   </td>
+   <td>Open the native share sheet with a predefined message and link that customers can send via SMS or any enabled social apps. 
+   </td>
+  </tr>
+  <tr>
+   <td><code>VIEW_FULLSCREEN</code>
+   </td>
+   <td>Trigger a full screen mobile web view. For example, this could be your microsite as configured in My Extole to display the share experience.
+   </td>
+  </tr>
+</table>
+
+### Custom Actions
+If you would like to create custom actions beyond our defaults, use the format exhibited in the example below. Please reach out to our Support Team at [support@extole.com](mailto:support@extole.com) if you have any questions.
+
+#### Example custom action
+In this example, describe how to create example pop up, asking question sending event to extole, returns JSON, pulling custom action value
 
 ```
-val extras = intent.extras
-val webViewItem = extras!!.getString("webViewItem").orEmpty()
+class CustomAction(@Se±rializedName("custom_action_value") val customParameter: String) : Action {
 
-val webView = findViewById<WebView>(R.id.webview)
-val context: Context = this
-GlobalScope.launch {
-    val webViewBuilder = extole.webViewBuilder(webView)
-    runOnUiThread {
-        val extoleWebView = webViewBuilder.create()
-        extoleWebView.load("microsite")
+    companion object {
+        val ACTION_TITLE = "CUSTOM_ACTION"
     }
+
+    override suspend fun execute(event: AppEvent, extole: ExtoleInternal) {
+        extole.getData()["custom_action_key"] = "custom_action_value"
+    }
+
+    override fun getType(): Action.ActionType = Action.ActionType.CUSTOM
+
+    override fun getTitle(): String = ACTION_TITLE
+}
+
+```
+
+#### Registering a custom action
+```
+Extole.registerAction("CUSTOM_ACTION", CustomAction::class.java)
+```
+
+## Appendix
+### Advanced Actions
+#### Load Operations
+
+```
+{
+  "type": "LOAD_OPERATIONS",
+  "zones": [
+    "<zone_name>"
+  ],
+  "data": {
+    "key": "value"
+  }
 }
 ```
 
-This example assumes you have configured a 'microsite' zone to server content.
-
-
-### Sending events
-
+####  Fetch
 ```
-extole.sendEvent("purchase", mapOf("order_id" to "123", "cart_value" to "120.30"))
+{
+  "type": "FETCH",
+  "zones": [
+    "<zone_name_1>",
+    "<zone_name_2>"
+  ]
+}
 ```
 
-### Sharing via Email through Extole
-
+#### Set Log Level
 ```
- GlobalScope.launch {
-    val (_, campaign) = extole.getZone("promotional_email")
-    campaign.emailShare(recipient, subject, message);
+{
+  "type": "SET_LOG_LEVEL",
+  "log_level": "WARN"
 }
 ```
