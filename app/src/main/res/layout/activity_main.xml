@@ -4,8 +4,8 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-  tools:context="com.extole.androidsdk.MainActivity">
+  android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+  tools:context="com.extole.mobile.MainActivity">
 
     <LinearLayout
       android:orientation="vertical"
@@ -16,25 +16,39 @@
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintBottom_toBottomOf="parent">
 
-        <Button
-          android:background="@android:color/white"
-          android:textColor="@android:color/black"
+        <LinearLayout
+          android:orientation="horizontal"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/menu_item" />
+          android:layout_height="46dp">
 
-        <Button
-          android:background="@android:color/white"
-          android:textColor="@android:color/black"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/deeplink"
-          android:text="Send Deeplink Event" />
+            <EditText
+              android:labelFor="@id/editText"
+              android:layout_width="302dp"
+              android:layout_height="match_parent"
+              android:inputType="textPersonName"
+              android:ems="10"
+              android:id="@+id/editText"
+              android:importantForAutofill="no" />
 
-        <ImageView
+            <Button
+              android:text="@string/button_text"
+              android:layout_width="match_parent"
+              android:layout_height="46dp"
+              android:id="@+id/button"
+              android:layout_marginEnd="1dp"
+              android:layout_marginBottom="683dp" />
+        </LinearLayout>
+
+        <WebView
+          android:id="@+id/webview"
           android:layout_width="match_parent"
-          android:layout_height="169dp"
-          android:id="@+id/image_view" />
+          android:layout_height="match_parent"
+          android:layout_marginStart="1dp"
+          android:layout_marginTop="1dp"
+          android:layout_marginEnd="1dp"
+          android:layout_marginBottom="1dp">
+
+        </WebView>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

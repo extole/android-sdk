@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+  tools:context="com.extole.mobile.SdkActivity">
+
+    <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent">
+
+        <EditText
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:inputType="textEmailAddress"
+          android:ems="10"
+          android:id="@+id/email"
+          tools:ignore="SpeakableTextPresentCheck" />
+
+        <Button
+          android:text="Identify"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/identify"
+          android:textColor="#000000" />
+
+        <TextView
+          android:text="Share link:...."
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/share_link" />
+
+        <Button
+          android:background="@android:color/white"
+          android:textColor="@android:color/black"
+          android:text="..."
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/apply_for_card" />
+
+        <Button
+          android:background="@android:color/white"
+          android:textColor="@android:color/black"
+          android:text="..."
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/menu_item" />
+
+        <ImageView
+          android:layout_width="match_parent"
+          android:layout_height="169dp"
+          android:id="@+id/share_image" />
+
+        <EditText
+          android:background="@android:color/white"
+          android:textColor="@android:color/black"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:inputType="textEmailAddress"
+          android:ems="10"
+          android:id="@+id/email_address"
+          android:hint="Enter email"
+          android:minHeight="48dp" />
+
+        <EditText
+          android:background="@android:color/white"
+          android:textColor="@android:color/black"
+          android:layout_width="match_parent"
+          android:layout_height="104dp"
+          android:inputType="textMultiLine"
+          android:ems="10"
+          android:id="@+id/email_message"
+          android:hint="Share message"
+          android:lines="8"
+          android:minLines="6"
+          android:gravity="top|left"
+          android:maxLines="10"
+          android:scrollbars="vertical"
+          android:singleLine="false" />
+
+        <Button
+          android:background="@android:color/white"
+          android:textColor="@android:color/black"
+          android:text="Email Share"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/email_share" />
+
+        <TextView
+          android:text="..."
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/copyright" />
+
+        <Button
+          android:text="Open Main View"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/main_view" />
+
+        <EditText
+          android:layout_width="match_parent"
+          android:layout_height="110dp"
+          android:inputType="textMultiLine"
+          android:gravity="start|top"
+          android:ems="10"
+          android:id="@+id/deeplink_text" />
+    </LinearLayout>
+
+</ScrollView>

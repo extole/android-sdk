@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.extole.mobile.sdk">
+    <application>
+        <activity
+          android:theme="@android:style/Theme.Black.NoTitleBar"
+          android:exported="true"
+          android:name="com.extole.android.sdk.impl.WebViewFullScreenActivity">
+        </activity>
+    </application>
+</manifest>

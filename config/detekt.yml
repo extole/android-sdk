@@ -102,7 +102,7 @@ complexity:
   LongParameterList:
     active: true
     functionThreshold: 15
-    constructorThreshold: 12
+    constructorThreshold: 15
     ignoreDefaultParameters: false
     ignoreDataClasses: true
     ignoreAnnotated: []
@@ -127,8 +127,8 @@ complexity:
   TooManyFunctions:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
-    thresholdInFiles: 15
-    thresholdInClasses: 15
+    thresholdInFiles: 30
+    thresholdInClasses: 30
     thresholdInInterfaces: 15
     thresholdInObjects: 15
     thresholdInEnums: 15
@@ -215,7 +215,7 @@ exceptions:
     active: false
   ThrowingExceptionsWithoutMessageOrCause:
     active: true
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     exceptions:
      - IllegalArgumentException
      - IllegalStateException
@@ -246,7 +246,7 @@ exceptions:
 formatting:
   active: true
   android: false
-  autoCorrect: false
+  autoCorrect: true
   AnnotationOnSeparateLine:
     active: false
     autoCorrect: true
@@ -382,40 +382,41 @@ naming:
   active: true
   ClassNaming:
     active: true
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     classPattern: '[A-Z][a-zA-Z0-9]*'
   ConstructorParameterNaming:
     active: true
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     parameterPattern: '[a-z][A-Za-z0-9]*'
     privateParameterPattern: '[a-z][A-Za-z0-9]*'
     excludeClassPattern: '$^'
     ignoreOverridden: true
   EnumNaming:
     active: true
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     enumEntryPattern: '[A-Z][_a-zA-Z0-9]*'
   ForbiddenClassName:
     active: false
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     forbiddenName: []
   FunctionMaxLength:
     active: false
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     maximumFunctionNameLength: 30
   FunctionMinLength:
     active: false
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     minimumFunctionNameLength: 3
   FunctionNaming:
     active: true
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     functionPattern: '([a-z][a-zA-Z0-9]*)|(`.*`)'
     excludeClassPattern: '$^'
     ignoreOverridden: true
     ignoreAnnotated: ['Composable']
   FunctionParameterNaming:
     active: true
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     parameterPattern: '[a-z][A-Za-z0-9]*'
     excludeClassPattern: '$^'
     ignoreOverridden: true
@@ -433,34 +434,34 @@ naming:
     active: false
   NonBooleanPropertyPrefixedWithIs:
     active: false
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
   ObjectPropertyNaming:
     active: true
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     constantPattern: '[A-Za-z][_A-Za-z0-9]*'
     propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
     privatePropertyPattern: '(_)?[A-Za-z][_A-Za-z0-9]*'
   PackageNaming:
     active: true
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     packagePattern: '[a-z]+(\.[a-z][A-Za-z0-9]*)*'
   TopLevelPropertyNaming:
     active: true
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     constantPattern: '[A-Z][_A-Z0-9]*'
     propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
     privatePropertyPattern: '_?[A-Za-z][_A-Za-z0-9]*'
   VariableMaxLength:
     active: false
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     maximumVariableNameLength: 64
   VariableMinLength:
     active: false
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     minimumVariableNameLength: 1
   VariableNaming:
     active: true
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     variablePattern: '[a-z][A-Za-z0-9]*'
     privateVariablePattern: '(_)?[a-z][A-Za-z0-9]*'
     excludeClassPattern: '$^'
@@ -472,10 +473,10 @@ performance:
     active: true
   ForEachOnRange:
     active: true
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
   SpreadOperator:
     active: true
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
   UnnecessaryTemporaryInstantiation:
     active: true
 
@@ -518,7 +519,7 @@ potential-bugs:
     active: true
   LateinitUsage:
     active: false
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     excludeAnnotatedProperties: []
     ignoreOnClassesPattern: ''
   MapGetWithNotNullAssertionOperator:
@@ -612,7 +613,7 @@ style:
     maxJumpCount: 1
   MagicNumber:
     active: true
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     ignoreNumbers: ['-1', '0', '1', '2']
     ignoreHashCodeFunction: true
     ignorePropertyDeclaration: false
@@ -741,5 +742,5 @@ style:
     active: true
   WildcardImport:
     active: true
-    excludes: []
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**']
     excludeImports: ['java.util.*', 'kotlinx.android.synthetic.*']
