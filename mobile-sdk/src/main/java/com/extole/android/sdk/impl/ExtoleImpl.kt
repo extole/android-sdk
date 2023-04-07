@@ -53,7 +53,7 @@ class ExtoleImpl(
         private const val APP_TYPE_HEADER = "X-Extole-App-Type"
         private const val APP_SHA_HEADER = "X-Extole-App-Sha"
         private const val USER_AGENT_HEADER = "User-Agent"
-        private const val IDENTIFY_EVENT_NAME = "identifiy"
+        private const val IDENTIFY_EVENT_NAME = "identify"
         private const val ACCESS_TOKEN_HEADER_NAME = "x-extole-token"
         private const val ACCESS_TOKEN = "access_token"
         private const val ACCESS_TOKEN_CHANGED_EVENT_NAME = "access_token_changed"
