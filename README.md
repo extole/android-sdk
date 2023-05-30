@@ -1,3 +1,5 @@
+[![Android SDK tests](https://github.com/extole/android/actions/workflows/sdk-test.yml/badge.svg?branch=master&event=schedule)](https://github.com/extole/android/actions/workflows/sdk-test.yml)
+
 # Android Integration
 This integration guide shows you how to set up and launch an Extole program as quickly as possible with our Android SDK.
 
