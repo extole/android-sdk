@@ -29,7 +29,7 @@ class ServiceLocator private constructor() {
             instance = extole
         }
 
-        private fun initializeExtole(context: Context) =
+        private suspend fun initializeExtole(context: Context) =
             Extole.init(
                 context = context, appName = "extole-mobile-test", data = mapOf("version" to "1.0"),
                 sandbox = "prod-test", labels = setOf("business"),

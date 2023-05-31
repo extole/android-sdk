@@ -7,6 +7,8 @@ import com.extole.android.sdk.impl.ExtoleInternal
 import com.extole.android.sdk.impl.app.App
 import com.extole.android.sdk.impl.gson.ActionDeserializer
 import com.extole.android.sdk.impl.gson.ConditionDeserializer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Extole is the entry point when integrating by using *Mobile SDK*.
@@ -129,7 +131,7 @@ interface Extole {
             ConditionDeserializer.typeMap[conditionType.uppercase()] = condition
         }
 
-        fun init(
+        suspend fun init(
             programDomain: String? = null,
             appName: String? = null,
             sandbox: String = "production-production",
@@ -144,21 +146,23 @@ interface Extole {
             additionalProtocolHandlers: List<ProtocolHandler> = emptyList(),
             disabledActions: Set<Action.ActionType> = emptySet()
         ): Extole {
-            return ExtoleInternal.init(
-                programDomain,
-                appName,
-                sandbox,
-                context,
-                labels,
-                data,
-                appData,
-                appHeaders,
-                email,
-                listenToEvents,
-                configurationLoader,
-                additionalProtocolHandlers,
-                disabledActions
-            )
+            return withContext(Dispatchers.IO) {
+                return@withContext ExtoleInternal.init(
+                    programDomain,
+                    appName,
+                    sandbox,
+                    context,
+                    labels,
+                    data,
+                    appData,
+                    appHeaders,
+                    email,
+                    listenToEvents,
+                    configurationLoader,
+                    additionalProtocolHandlers,
+                    disabledActions
+                )
+            }
         }
     }
 }
