@@ -144,13 +144,17 @@ class ExtoleSdkTests {
     @Test
     fun testLogout() {
         val personEmail = "person-email@mailosaur.com"
+
         val extole =
-            Extole.init(
-                "mobile-monitor.extole.io",
-                context = context, appName = "mobile-monitor", labels = setOf("business"),
-                data = mapOf("version" to "1.0"),
-                email = personEmail
-            )
+            runBlocking {
+                return@runBlocking Extole.init(
+                    "mobile-monitor.extole.io",
+                    context = context, appName = "mobile-monitor", labels = setOf("business"),
+                    data = mapOf("version" to "1.0"),
+                    email = personEmail
+                )
+            }
+
         val sharedPreferences =
             context.getSharedPreferences("extole-data", Context.MODE_PRIVATE)
         val accessToken = sharedPreferences.getString("access_token", null)
@@ -209,7 +213,8 @@ class ExtoleSdkTests {
         assertThat(initialTimeStampValue).isEqualTo(timeValueObtainedFromCache)
 
         val prefetchedCtaTime = Instant.ofEpochSecond(prefetchedCtaTimestampValue)
-        val prefetchedCtaTimeAfterLogout = Instant.ofEpochSecond(prefetchedCtaTimestampValueAfterLogout)
+        val prefetchedCtaTimeAfterLogout =
+            Instant.ofEpochSecond(prefetchedCtaTimestampValueAfterLogout)
         val initialTime = Instant.ofEpochSecond(initialTimeStampValue)
         val timeAfterLogout = Instant.ofEpochSecond(timestampValueAfterLogout)
 
@@ -222,12 +227,15 @@ class ExtoleSdkTests {
     fun testIdentifyWillFlushCache() {
         val personEmail = "person-email@mailosaur.com"
         val extole =
-            Extole.init(
-                "mobile-monitor.extole.io",
-                context = context, appName = "mobile-monitor", labels = setOf("business"),
-                data = mapOf("version" to "1.0"),
-                email = personEmail
-            )
+            runBlocking {
+                return@runBlocking Extole.init(
+                    "mobile-monitor.extole.io",
+                    context = context, appName = "mobile-monitor", labels = setOf("business"),
+                    data = mapOf("version" to "1.0"),
+                    email = personEmail
+                )
+            }
+
 
         val initialTimeStampValue = runBlocking {
             val (ctaZone, _) = extole.fetchZone("mobile_cta_timestamp")

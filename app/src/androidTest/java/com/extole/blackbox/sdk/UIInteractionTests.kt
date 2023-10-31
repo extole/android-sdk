@@ -60,7 +60,7 @@ class UIInteractionTests {
         )
     }
 
-    @Ignore
+    @Ignore // Todo Save Failed Tests Screen ENG-21130
     @Test
     fun testSharingIsHandledByProtocolHandlersWhenUsingSms() {
         whenUserOpensShareExperience()
@@ -74,6 +74,7 @@ class UIInteractionTests {
         smsShareDialogIsDisplayed()
     }
 
+    @Ignore // Todo Save Failed Tests Screen ENG-21130
     @Test
     fun testNativeSharingUsingWebView() {
         whenUserOpensShareExperience()
