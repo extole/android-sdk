@@ -110,7 +110,11 @@ class ExtoleImpl(
 
     override fun getContext(): ApplicationContext = context
 
-    override suspend fun sendEvent(eventName: String, data: Map<String, Any?>): Id<Event> {
+    override suspend fun sendEvent(
+        eventName: String,
+        data: Map<String, Any?>,
+        jwt: String?
+    ): Id<Event> {
         EventBus.getDefault().post(AppEvent(eventName, data))
         try {
             val requestData = mutableMapOf<String, Any?>()
@@ -119,6 +123,9 @@ class ExtoleImpl(
             val requestBody = mutableMapOf<String, Any?>()
             requestBody["event_name"] = eventName
             requestBody["data"] = requestData
+            jwt?.let {
+                requestBody["jwt"] = it
+            }
 
             val httpPostResult = extoleServices.getEventsEndpoints().post(requestBody)
             val accessTokenHeader = httpPostResult.headers.entries
@@ -157,6 +164,10 @@ class ExtoleImpl(
         val identifyData = data.toMutableMap()
         identifyData["email"] = identifier
         return sendEvent(IDENTIFY_EVENT_NAME, identifyData)
+    }
+
+    override suspend fun identifyJwt(jwt: String, data: Map<String, String>): Id<Event> {
+        return sendEvent(IDENTIFY_EVENT_NAME, data, jwt)
     }
 
     override suspend fun clone(

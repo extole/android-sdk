@@ -58,7 +58,8 @@ interface Extole {
     @Throws(RestException::class)
     suspend fun sendEvent(
         eventName: String,
-        data: Map<String, Any?> = emptyMap()
+        data: Map<String, Any?> = emptyMap(),
+        jwt: String? = null
     ): Id<Event>
 
     /**
@@ -69,6 +70,9 @@ interface Extole {
      */
     @Throws(RestException::class)
     suspend fun identify(identifier: String, data: Map<String, String> = mapOf()): Id<Event>
+
+    @Throws(RestException::class)
+    suspend fun identifyJwt(jwt: String, data: Map<String, String> = mapOf()): Id<Event>
 
     /**
      * Used to clear cache and remove current access_token

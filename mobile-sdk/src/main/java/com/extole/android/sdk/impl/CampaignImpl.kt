@@ -73,7 +73,11 @@ class CampaignImpl(
         return requestData
     }
 
-    override suspend fun sendEvent(eventName: String, data: Map<String, Any?>): Id<Event> {
+    override suspend fun sendEvent(
+        eventName: String,
+        data: Map<String, Any?>,
+        jwt: String?
+    ): Id<Event> {
         try {
             val requestData = mutableMapOf<String, Any?>()
             requestData.putAll(data)
@@ -83,6 +87,9 @@ class CampaignImpl(
             val requestBody = mutableMapOf<String, Any?>()
             requestBody["event_name"] = eventName
             requestBody["data"] = requestData
+            jwt?.let {
+                requestBody["jwt"] = it
+            }
             return Id(
                 extole.getServices().getEventsEndpoints().post(requestBody).entity.getString("id")
             )
@@ -97,8 +104,12 @@ class CampaignImpl(
         }
     }
 
-    override suspend fun identify(email: String, data: Map<String, String>): Id<Event> {
-        return extole.identify(email, data)
+    override suspend fun identify(identifier: String, data: Map<String, String>): Id<Event> {
+        return extole.identify(identifier, data)
+    }
+
+    override suspend fun identifyJwt(jwt: String, data: Map<String, String>): Id<Event> {
+        return extole.identifyJwt(jwt, data)
     }
 
     override fun logout() {
