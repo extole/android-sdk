@@ -14,11 +14,11 @@ import org.apache.commons.lang3.RandomStringUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.Awaitility.await
 import org.awaitility.Duration
-import org.json.JSONObject
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.Instant
+
 
 @RunWith(AndroidJUnit4::class)
 class ExtoleSdkTests {
@@ -412,6 +412,73 @@ class ExtoleSdkTests {
         }
 
         assertThat(emailAfterIdentify).isEqualTo("null")
+    }
+
+    @Test
+    fun testIdentifyJwtAtInit() {
+        val jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjUzNmQwNWE2LTMzZWUtNDI2NC04ODI2LW" +
+          "JhZDRjOTAyMWZhZiJ9.eyJpc3MiOiJtb2JpbGUtc2RrLmV4dG9sZS5jb20iLCJhdWQiOlsiZXh0b2xlLmNvbSJ" +
+          "dLCJlbWFpbCI6InNka3BlcnNvbi1lbWFpbEBtYWlsb3NhdXIuY29tIiwiaWF0IjoxNzA1NTg0Mjg0LCJleHAiO" +
+          "jI0ODMxODQyODR9.XdB5-j58GcEeKqKkCLd5f_G78CLLJIHCmsfcOpH-n3o"
+        val extole =
+            runBlocking {
+                return@runBlocking Extole.init(
+                    "mobile-monitor.extole.io",
+                    context = context, appName = "mobile-monitor", labels = setOf("business"),
+                    data = mapOf("version" to "1.0"),
+                    jwt = jwt
+                )
+            }
+
+        val emailBeforeIdentify = runBlocking {
+            val (ctaZone, _) = extole.fetchZone("mobile_cta_timestamp")
+            ctaZone?.get("email").toString()
+        }
+        assertThat(emailBeforeIdentify).isEqualTo("sdkperson-email@mailosaur.com")
+    }
+
+    @Test
+    fun testIdentifyJwtWithoutEmailAndEmailPassedAsASeparateParameter() {
+        val jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjUzNmQwNWE2LTMzZWUtNDI2NC04ODI2" +
+          "LWJhZDRjOTAyMWZhZiJ9.eyJpc3MiOiJtb2JpbGUtc2RrLmV4dG9sZS5jb20iLCJhdWQiOlsiZXh0b2xlLmN" +
+          "vbSJdLCJpYXQiOjE3MDU5MjQwMDksImV4cCI6MjQ4MzUyNDAwOX0.X2GnR6OV9amojSLSzoXeecoujrnMzyY" +
+          "As5VWzR86U4M"
+        val extole =
+            runBlocking {
+                return@runBlocking Extole.init(
+                    "mobile-monitor.extole.io",
+                    context = context, appName = "mobile-monitor", labels = setOf("business"),
+                    data = mapOf("version" to "1.0"),
+                    email = "separate-email-person-email@mailosaur.com",
+                    jwt = jwt
+                )
+            }
+
+        val personEmail = runBlocking {
+            val (ctaZone, _) = extole.fetchZone("mobile_cta_timestamp")
+            ctaZone?.get("email").toString()
+        }
+        assertThat(personEmail).isEqualTo("separate-email-person-email@mailosaur.com")
+    }
+
+    @Test
+    fun testIdentifyJwtAtInitWithoutEmailIsInitializedAsAnonymous() {
+        val jwt = "invalid_jwt"
+        val extole =
+            runBlocking {
+                return@runBlocking Extole.init(
+                    "mobile-monitor.extole.io",
+                    context = context, appName = "mobile-monitor", labels = setOf("business"),
+                    data = mapOf("version" to "1.0"),
+                    jwt = jwt
+                )
+            }
+
+        val personEmail = runBlocking {
+            val (ctaZone, _) = extole.fetchZone("mobile_cta_timestamp")
+            ctaZone?.get("email").toString()
+        }
+        assertThat(personEmail).isEqualTo("null")
     }
 
 }

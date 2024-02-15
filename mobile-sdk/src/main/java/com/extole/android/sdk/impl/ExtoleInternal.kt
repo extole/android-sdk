@@ -26,7 +26,8 @@ interface ExtoleInternal : Extole {
             listenToEvents: Boolean = true,
             configurationLoader: ((app: App, data: Map<String, Any>) -> List<Operation>)? = null,
             additionalProtocolHandlers: List<ProtocolHandler> = emptyList(),
-            disabledActions: Set<Action.ActionType> = emptySet()
+            disabledActions: Set<Action.ActionType> = emptySet(),
+            jwt: String? = null
         ): ExtoleInternal {
             val applicationContext =
                 ApplicationContext(context, SharedPreferencesPersistence(context))
@@ -43,7 +44,8 @@ interface ExtoleInternal : Extole {
                 listenToEvents,
                 additionalProtocolHandlers,
                 configurationLoader,
-                disabledActions
+                disabledActions,
+                jwt
             )
             return extole
         }

@@ -148,7 +148,8 @@ interface Extole {
             listenToEvents: Boolean = true,
             configurationLoader: ((app: App, data: Map<String, Any>) -> List<Operation>)? = null,
             additionalProtocolHandlers: List<ProtocolHandler> = emptyList(),
-            disabledActions: Set<Action.ActionType> = emptySet()
+            disabledActions: Set<Action.ActionType> = emptySet(),
+            jwt: String? = null
         ): Extole {
             return withContext(Dispatchers.IO) {
                 return@withContext ExtoleInternal.init(
@@ -164,7 +165,8 @@ interface Extole {
                     listenToEvents,
                     configurationLoader,
                     additionalProtocolHandlers,
-                    disabledActions
+                    disabledActions,
+                    jwt
                 )
             }
         }

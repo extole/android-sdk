@@ -23,10 +23,11 @@ class AuthorizationEndpoints(
         return endpoints.handleResponse(httpRequest)
     }
 
-    fun createToken(email: String?): ResponseEntity<JSONObject> {
+    fun createToken(email: String?, jwt: String?): ResponseEntity<JSONObject> {
         val body = JSONObject()
         val httpRequest = endpoints.createHttpRequest(baseUrl, METHOD_POST)
         email?.let { body.put("email", it) }
+        jwt?.let { body.put("jwt", it) }
         httpRequest.send(body.toString())
         return endpoints.handleResponse(httpRequest)
     }

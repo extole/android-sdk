@@ -42,7 +42,8 @@ class ExtoleImpl(
     val listenToEvents: Boolean = true,
     val additionalProtocolHandlers: List<ProtocolHandler>,
     private val configurationLoader: ((app: App, data: Map<String, Any>) -> List<Operation>)? = null,
-    private val disabledActions: Set<Action.ActionType> = emptySet()
+    private val disabledActions: Set<Action.ActionType> = emptySet(),
+    val jwt: String? = null
 ) : ExtoleInternal {
 
     companion object {
@@ -71,7 +72,7 @@ class ExtoleImpl(
 
     init {
         appData["appName"] = appName
-        initApiClient(identifier)
+        initApiClient(identifier, jwt)
         if (listenToEvents) {
             subscribe()
         }
@@ -240,19 +241,19 @@ class ExtoleImpl(
         context.getPersistence().put(key, value)
     }
 
-    private fun initApiClient(identifier: String? = null) {
+    private fun initApiClient(identifier: String? = null, jwt: String? = null) {
         val androidLogger = ExtoleLogger.builder().build()
         androidLogger.debug("Initialized Extole for programDomain=$programDomain")
         accessToken = context.getPersistence().get(ACCESS_TOKEN_PREFERENCES_KEY)
         tokenApi = AuthorizationEndpoints(programDomain, accessToken, getHeaders())
-        if (accessToken == null || identifier != null) {
-            createAccessToken(identifier)
-        } else {
-            try {
+        try {
+            if (accessToken == null || identifier != null) {
+                createAccessToken(identifier, jwt)
+            } else {
                 tokenApi.getTokenDetails(mapOf(ACCESS_TOKEN to accessToken))
-            } catch (e: RestException) {
-                createAccessToken()
             }
+        } catch (e: RestException) {
+            createAccessToken()
         }
         extoleServices = ExtoleServicesImpl(this)
         val extoleLogger = ExtoleLogger.builder()
@@ -262,8 +263,8 @@ class ExtoleImpl(
         extoleLogger.debug("Access Token initialized: $accessToken")
     }
 
-    private fun createAccessToken(identifier: String? = null) {
-        val accessToken = tokenApi.createToken(identifier).entity.getString(ACCESS_TOKEN)
+    private fun createAccessToken(identifier: String? = null, jwt: String? = null) {
+        val accessToken = tokenApi.createToken(identifier, jwt).entity.getString(ACCESS_TOKEN)
         setAccessToken(accessToken)
     }
 
