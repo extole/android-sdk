@@ -60,6 +60,20 @@ class UIInteractionTests {
         )
     }
 
+    @Test
+    fun testDataIsCarriedToWebViewOnCtaItemClick() {
+        userClicksLogout()
+        whenUserClicksOnCtaItem()
+
+        val emailPlaceholder = uiDevice.findObject(
+            UiSelector().textMatches(".*extole.io.*")
+        )
+        emailPlaceholder.waitForExists(WAIT_FOR_ELEMENT_TIMEOUT)
+
+        assertThat(emailPlaceholder.text).isNotEmpty()
+        assertThat(emailPlaceholder.text).matches(".*extole-monitor-android.extole.io.*")
+    }
+
     @Ignore // Todo Save Failed Tests Screen ENG-21130
     @Test
     fun testSharingIsHandledByProtocolHandlersWhenUsingSms() {
@@ -129,6 +143,27 @@ class UIInteractionTests {
         element.click()
     }
 
+    private fun userClicksLogout() {
+        val logoutButton =
+            uiDevice.findObject(UiSelector().resourceId("$EXTOLE_APP_PACKAGE:id/menu_item"))
+        logoutButton.click()
+    }
+
+    private fun whenUserClicksOnCtaItem() {
+        val mainViewButton =
+            uiDevice.findObject(UiSelector().resourceId("$EXTOLE_APP_PACKAGE:id/apply_for_card"))
+        mainViewButton.click()
+
+        val webView = uiDevice.findObject(UiSelector().resourceId("$EXTOLE_APP_PACKAGE:id/webview"))
+        webView.waitForExists(TimeUnit.SECONDS.toMillis(3))
+
+        val shareExperience: UiObject = uiDevice.findObject(
+            UiSelector().resourceId("extole-share-experience")
+        )
+        shareExperience.waitForExists(TimeUnit.SECONDS.toMillis(10))
+        scroll(3)
+    }
+
     private fun whenUserOpensShareExperience() {
         val mainViewButton =
             uiDevice.findObject(UiSelector().resourceId("$EXTOLE_APP_PACKAGE:id/main_view"))
@@ -167,7 +202,7 @@ class UIInteractionTests {
             UiSelector().resourceId("android:id/content_preview_text")
                 .className("android.widget.TextView")
         )
-        assertThat(shareMessage.exists())
+        assertThat(shareMessage).isNotNull
         assertThat(shareMessage.text)
             .contains("Your Company is great!")
     }

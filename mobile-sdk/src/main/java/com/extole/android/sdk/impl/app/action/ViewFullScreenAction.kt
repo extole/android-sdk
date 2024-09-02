@@ -19,6 +19,9 @@ data class ViewFullScreenAction(@SerializedName("zone_name") val zoneName: Strin
         extole.getData().forEach {
             intent.putExtra(it.key, it.value)
         }
+        event.eventData.forEach {
+            intent.putExtra(it.key, it.value as String)
+        }
         intent.putExtra("extole_zone_name", zoneName)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         extole.getContext().getAppContext().startActivity(intent)

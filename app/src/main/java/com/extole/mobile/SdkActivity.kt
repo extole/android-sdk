@@ -28,6 +28,16 @@ class SdkActivity : AppCompatActivity() {
             extole = ServiceLocator.getExtole(this@SdkActivity)
             extole.sendEvent("app_opened")
             val (ctaZone, campaign) = extole.fetchZone("mobile_cta")
+
+            val logoutButton = findViewById<Button>(R.id.menu_item)
+            runOnUiThread {
+                logoutButton.setOnClickListener {
+                    GlobalScope.launch {
+                        extole.logout()
+                    }
+                }
+            }
+
             runOnUiThread {
                 findViewById<EditText>(R.id.email_message).setText(
                     ctaZone?.get("title").toString(), TextView.BufferType.NORMAL
@@ -44,7 +54,8 @@ class SdkActivity : AppCompatActivity() {
                 applyForCardButton.setOnClickListener {
                     Log.d("Extole", "tap")
                     GlobalScope.launch {
-                        extole.sendEvent("deeplink", mapOf("extole_parameter" to "value"))
+                        extole.sendEvent("deeplink", mapOf("extole_parameter" to "value",
+                            "email" to "android@mailosaur.com"))
                     }
                 }
             }
