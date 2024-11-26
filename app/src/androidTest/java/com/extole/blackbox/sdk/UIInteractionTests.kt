@@ -25,7 +25,6 @@ class UIInteractionTests {
         private const val EXTOLE_APP_PACKAGE = "com.extole"
         private const val LAUNCH_TIMEOUT = 5000L
         private val WAIT_FOR_ELEMENT_TIMEOUT = TimeUnit.SECONDS.toMillis(30L)
-
     }
 
     private lateinit var uiDevice: UiDevice
@@ -105,7 +104,7 @@ class UIInteractionTests {
     @Test
     fun testNativeSharingUsingEvents() {
         val customMenuItem =
-            uiDevice.findObject(UiSelector().resourceId("$EXTOLE_APP_PACKAGE:id/menu_item"))
+            uiDevice.findObject(UiSelector().resourceId("$EXTOLE_APP_PACKAGE:id/native_share"))
         customMenuItem.waitForExists(WAIT_FOR_ELEMENT_TIMEOUT)
         customMenuItem.click()
 

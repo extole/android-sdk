@@ -6,8 +6,8 @@ import com.extole.android.sdk.Operation
 import com.extole.android.sdk.impl.ExtoleInternal
 
 class OperationImpl(
-    private val conditions: List<Condition>,
-    private val actions: List<Action>
+    private val conditions: List<Condition>?,
+    private val actions: List<Action>?
 ) : Operation {
 
     override suspend fun executeActions(event: AppEvent, extole: ExtoleInternal) {
@@ -25,19 +25,19 @@ class OperationImpl(
         event: AppEvent,
         extole: ExtoleInternal
     ): List<Condition> {
-        return conditions.filter { it.passes(event, extole) }
+        return conditions?.filter { it.passes(event, extole) }.orEmpty()
     }
 
     override fun actionsToExecute(event: AppEvent, extole: ExtoleInternal): List<Action> {
-        if (passingConditions(event, extole).size == conditions.size) {
-            return actions
+        if (passingConditions(event, extole).size == conditions?.size) {
+            return actions.orEmpty()
         }
         return emptyList()
     }
 
-    override fun getActions(): List<Action> = actions
+    override fun getActions(): List<Action> = actions.orEmpty()
 
-    override fun getConditions(): List<Condition> = conditions
+    override fun getConditions(): List<Condition> = conditions.orEmpty()
 
     override fun toString(): String {
         return "Operation Conditions: $conditions, Actions: $actions"

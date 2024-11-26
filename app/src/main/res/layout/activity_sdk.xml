@@ -8,42 +8,42 @@
   tools:context="com.extole.mobile.SdkActivity">
 
     <LinearLayout
-      android:orientation="vertical"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:inputType="textEmailAddress"
-          android:ems="10"
-          android:id="@+id/email"
-          tools:ignore="SpeakableTextPresentCheck" />
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <Button
-          android:text="Identify"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/identify"
-          android:textColor="#000000" />
+            android:id="@+id/identify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Identify"
+            android:textColor="#000000" />
 
         <TextView
-          android:text="Share link:...."
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/share_link" />
+            android:id="@+id/share_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Share link:...." />
 
         <Button
-          android:background="@android:color/white"
-          android:textColor="@android:color/black"
-          android:text="..."
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/apply_for_card" />
+            android:id="@+id/apply_for_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:text="..."
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/menu_item"
@@ -53,65 +53,73 @@
             android:text="Logout"
             android:textColor="@android:color/black" />
 
+        <Button
+            android:id="@+id/native_share"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:text="Native Share"
+            android:textColor="@android:color/black" />
+
         <ImageView
-          android:layout_width="match_parent"
-          android:layout_height="169dp"
-          android:id="@+id/share_image" />
+            android:id="@+id/share_image"
+            android:layout_width="match_parent"
+            android:layout_height="169dp" />
 
         <EditText
-          android:background="@android:color/white"
-          android:textColor="@android:color/black"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:inputType="textEmailAddress"
-          android:ems="10"
-          android:id="@+id/email_address"
-          android:hint="Enter email"
-          android:minHeight="48dp" />
+            android:id="@+id/email_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:ems="10"
+            android:hint="Enter email"
+            android:inputType="textEmailAddress"
+            android:minHeight="48dp"
+            android:textColor="@android:color/black" />
 
         <EditText
-          android:background="@android:color/white"
-          android:textColor="@android:color/black"
-          android:layout_width="match_parent"
-          android:layout_height="104dp"
-          android:inputType="textMultiLine"
-          android:ems="10"
-          android:id="@+id/email_message"
-          android:hint="Share message"
-          android:lines="8"
-          android:minLines="6"
-          android:gravity="top|left"
-          android:maxLines="10"
-          android:scrollbars="vertical"
-          android:singleLine="false" />
+            android:id="@+id/email_message"
+            android:layout_width="match_parent"
+            android:layout_height="104dp"
+            android:background="@android:color/white"
+            android:ems="10"
+            android:gravity="top|left"
+            android:hint="Share message"
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:maxLines="10"
+            android:minLines="6"
+            android:scrollbars="vertical"
+            android:singleLine="false"
+            android:textColor="@android:color/black" />
 
         <Button
-          android:background="@android:color/white"
-          android:textColor="@android:color/black"
-          android:text="Email Share"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/email_share" />
+            android:id="@+id/email_share"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:text="Email Share"
+            android:textColor="@android:color/black" />
 
         <TextView
-          android:text="..."
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/copyright" />
+            android:id="@+id/copyright"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="..." />
 
         <Button
-          android:text="Open Main View"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/main_view" />
+            android:id="@+id/main_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Open Main View" />
 
         <EditText
-          android:layout_width="match_parent"
-          android:layout_height="110dp"
-          android:inputType="textMultiLine"
-          android:gravity="start|top"
-          android:ems="10"
-          android:id="@+id/deeplink_text" />
+            android:id="@+id/deeplink_text"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine" />
     </LinearLayout>
 
 </ScrollView>

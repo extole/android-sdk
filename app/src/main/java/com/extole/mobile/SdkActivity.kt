@@ -61,7 +61,7 @@ class SdkActivity : AppCompatActivity() {
             }
             ctaZone?.viewed()
 
-            findViewById<Button>(R.id.menu_item).setOnClickListener {
+            findViewById<Button>(R.id.native_share).setOnClickListener {
                 GlobalScope.launch {
                     ctaZone?.tap()
                 }

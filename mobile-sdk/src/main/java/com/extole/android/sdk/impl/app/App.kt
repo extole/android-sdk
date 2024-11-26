@@ -1,7 +1,9 @@
 package com.extole.android.sdk.impl.app
 
 import com.extole.android.sdk.impl.ExtoleInternal
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.LinkedList
@@ -24,8 +26,8 @@ object App {
         }
         while (eventCanBeProcessed(appEvent)) {
             val queuedEvent = eventsQueue.poll()
-            runBlocking {
-                extole.getLogger().debug("Received event $queuedEvent")
+            extole.getLogger().debug("Received event $queuedEvent")
+            CoroutineScope(Dispatchers.IO).launch {
                 if (queuedEvent != null) {
                     AppEngine(extole.getOperations()).execute(queuedEvent, extole)
                 }
