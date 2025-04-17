@@ -34,7 +34,7 @@ data class NativeShareAction(
                 extole.getLabels()
             )
 
-            return zoneResponse.get(zone)?.get("message").toString()
+            return zoneResponse.get(zone, extole.getData())?.get("message").toString()
         }
         return message ?: ""
     }

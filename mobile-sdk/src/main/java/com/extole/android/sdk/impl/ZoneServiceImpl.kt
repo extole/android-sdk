@@ -34,7 +34,7 @@ class ZoneServiceImpl(val extole: ExtoleInternal) :
         }.awaitAll()
 
         zoneResponses.forEach { zoneResponse ->
-            prefetchedResponses[ZoneResponseKey(zoneResponse.getName())] = zoneResponse
+            prefetchedResponses[ZoneResponseKey(zoneResponse.getName(), data)] = zoneResponse
         }
         return@coroutineScope Zones(prefetchedResponses.filter { it.value != null }
             .toMutableMap())

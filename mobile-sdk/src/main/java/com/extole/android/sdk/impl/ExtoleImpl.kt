@@ -87,14 +87,14 @@ class ExtoleImpl(
         requestData.putAll(this.data)
         EventBus.getDefault().post(AppEvent(zoneName, fethZoneData))
         val campaign: Campaign?
-        var zoneResponse = zonesResponse.get(zoneName)
+        var zoneResponse = zonesResponse.get(zoneName, fethZoneData)
         if (zoneResponse == null) {
             extoleServices.getZoneService()
                 .getZones(setOf(zoneName), fethZoneData, labels)
                 .getAll().forEach { response ->
                     response.value?.let { zonesResponse.add(response.key, it) }
                 }
-            zoneResponse = zonesResponse.get(zoneName)
+            zoneResponse = zonesResponse.get(zoneName, fethZoneData)
         }
 
         campaign = CampaignImpl(

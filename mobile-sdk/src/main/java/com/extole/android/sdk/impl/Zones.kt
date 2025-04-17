@@ -4,8 +4,8 @@ import com.extole.android.sdk.Zone
 
 data class Zones(private var zoneResponses: MutableMap<ZoneResponseKey, Zone?>) {
 
-    fun get(zoneName: String): Zone? {
-        return zoneResponses[ZoneResponseKey(zoneName)]
+    fun get(zoneName: String, data: Map<String, Any?>): Zone? {
+        return zoneResponses[ZoneResponseKey(zoneName, data)]
     }
 
     fun add(zoneKey: ZoneResponseKey, zone: Zone) {
@@ -15,4 +15,4 @@ data class Zones(private var zoneResponses: MutableMap<ZoneResponseKey, Zone?>) 
     fun getAll(): Map<ZoneResponseKey, Zone?> = zoneResponses
 }
 
-data class ZoneResponseKey(val zoneName: String)
+data class ZoneResponseKey(val zoneName: String, val data: Map<String, Any?>)
