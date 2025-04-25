@@ -40,7 +40,7 @@ class CampaignImpl(
             if (zones.containsKey(zoneName)) {
                 prefetchContent = zones[zoneName]
             } else {
-                prefetchContent = fetchZone(setOf(zoneName), fethZoneData).get(zoneName)?.content
+                prefetchContent = fetchZone(setOf(zoneName), fethZoneData).get(zoneName, fethZoneData)?.content
                 zones[zoneName] = prefetchContent
             }
         }
