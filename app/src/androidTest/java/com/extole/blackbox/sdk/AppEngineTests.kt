@@ -76,9 +76,9 @@ class AppEngineTests {
                     extole
                 )
             assertThat(actionsToExecute).hasSize(1)
-                .flatExtracting(Action::getType).containsExactly(PROMPT)
+                .extracting("type").containsExactly(PROMPT)
             assertThat(passingConditions).hasSize(1)
-                .flatExtracting(Condition::getType).containsExactly(EVENT)
+                .extracting("type").containsExactly(EVENT)
         }
     }
 
@@ -108,7 +108,7 @@ class AppEngineTests {
             )
             assertThat(actionsToExecute).hasSize(0)
             assertThat(passingConditions).hasSize(1)
-                .flatExtracting(Condition::getType).containsExactly(EVENT)
+                .extracting("type").containsExactly(EVENT)
         }
     }
 
@@ -151,7 +151,7 @@ class AppEngineTests {
             ]
         """
         val operationsType = object : TypeToken<List<OperationImpl>>() {}.type
-        val operations = gson.fromJson<List<OperationImpl>>(operationsJson, operationsType)
+        val operations: List<OperationImpl> = gson.fromJson(operationsJson, operationsType)
 
         assertThat(operations).hasSize(1)
         assertThat(operations[0].getConditions()).hasSize(1)
@@ -161,7 +161,7 @@ class AppEngineTests {
         )
 
         assertThat(operations[0].getActions()).hasSize(3)
-        assertThat(operations[0].getActions()).flatExtracting(Action::getType)
+        assertThat(operations[0].getActions()).extracting("type")
             .containsExactlyInAnyOrder(VIEW_FULLSCREEN, FETCH, SET_LOG_LEVEL)
         assertThat((operations[0].getActions()[0] as ViewFullScreenAction).zoneName).isEqualTo("welcome_offer")
         assertThat((operations[0].getActions()[1] as FetchAction).zones).containsExactly(
@@ -214,9 +214,9 @@ class AppEngineTests {
             .containsValue("name")
 
         assertThat(operations[0].getActions()).hasSize(1)
-        assertThat(operations[0].getActions()).flatExtracting(Action::getType)
+        assertThat(operations[0].getActions()).extracting("type")
             .containsExactlyInAnyOrder(Action.ActionType.CUSTOM)
-        assertThat(operations[0].getActions()).flatExtracting(Action::getTitle)
+        assertThat(operations[0].getActions()).extracting("title")
             .containsExactlyInAnyOrder(ACTION_TITLE)
         assertThat((operations[0].getActions()[0] as CustomActionWithDataParameters).data)
             .containsKey("custom_key")
@@ -265,9 +265,9 @@ class AppEngineTests {
             .containsExactly("custom_value")
 
         assertThat(operations[0].getActions()).hasSize(1)
-        assertThat(operations[0].getActions()).flatExtracting(Action::getType)
+        assertThat(operations[0].getActions()).extracting("type")
             .containsExactlyInAnyOrder(Action.ActionType.CUSTOM)
-        assertThat(operations[0].getActions()).flatExtracting(Action::getTitle)
+        assertThat(operations[0].getActions()).extracting("title")
             .containsExactlyInAnyOrder(ACTION_TITLE)
         assertThat((operations[0].getActions()[0] as CustomAction).customParameter)
             .isEqualTo("custom_value")
@@ -378,7 +378,7 @@ class AppEngineTests {
             await().atMost(Duration.TEN_SECONDS).untilAsserted {
                 assertThat(extole.getZonesResponse().getAll()).hasSize(1)
                 assertThat(extole.getZonesResponse().getAll().keys)
-                    .flatExtracting(ZoneResponseKey::zoneName)
+                    .extracting("zoneName")
                     .containsExactlyInAnyOrder(
                         "mobile_cta"
                     )

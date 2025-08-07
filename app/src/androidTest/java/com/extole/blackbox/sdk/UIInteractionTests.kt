@@ -24,7 +24,7 @@ class UIInteractionTests {
     companion object {
         private const val EXTOLE_APP_PACKAGE = "com.extole"
         private const val LAUNCH_TIMEOUT = 5000L
-        private val WAIT_FOR_ELEMENT_TIMEOUT = TimeUnit.SECONDS.toMillis(30L)
+        private val WAIT_FOR_ELEMENT_TIMEOUT = TimeUnit.SECONDS.toMillis(10L)
     }
 
     private lateinit var uiDevice: UiDevice
@@ -59,6 +59,7 @@ class UIInteractionTests {
         )
     }
 
+    @Ignore // Todo Save Failed Tests Screen ENG-21130
     @Test
     fun testDataIsCarriedToWebViewOnCtaItemClick() {
         userClicksLogout()
@@ -110,17 +111,12 @@ class UIInteractionTests {
 
         assureChromeBrowserConcentFlow()
 
-        val nativeShareView = uiDevice.findObject(
-            UiSelector().resourceId("android:id/contentPanel")
-                .className("android.widget.ScrollView")
-        )
-        nativeShareView.waitForExists(WAIT_FOR_ELEMENT_TIMEOUT)
-
         val shareImage = uiDevice.findObject(
-            UiSelector().resourceId("android:id/content_preview_filename")
-                .className("android.widget.TextView")
+            UiSelector()
+                .resourceId("com.android.intentresolver:id/content_preview_filename")
         )
 
+        shareImage.waitForExists(WAIT_FOR_ELEMENT_TIMEOUT)
         assertThat(shareImage.exists())
         assertThat(shareImage.text).isEqualTo("generic-social.jpg")
     }

@@ -7,6 +7,7 @@ import com.extole.android.sdk.Extole
 import com.extole.blackbox.BlackboxNameGenerator
 import com.extole.blackbox.RestException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -179,7 +180,9 @@ class ExtoleSdkTests {
 
         assertThat(prefetchedCtaTimestampValue).isLessThan(initialTimeStampValue);
         assertThat(accessToken).isNotNull
-        extole.logout()
+        runBlocking {
+            extole.logout()
+        }
 
         val prefetchedCtaTimestampValueAfterLogout = runBlocking {
             val (ctaZone, _) = extole.fetchZone("mobile_cta")
@@ -226,45 +229,35 @@ class ExtoleSdkTests {
 
     @Test
     fun testIdentifyWillFlushCache() {
-        val personEmail = "person-email@mailosaur.com"
-        val extole =
-            runBlocking {
-                return@runBlocking Extole.init(
-                    "mobile-monitor.extole.io",
-                    context = context, appName = "mobile-monitor", labels = setOf("business"),
-                    data = mapOf("version" to "1.0"),
-                    email = personEmail
-                )
-            }
+        runBlocking(Dispatchers.IO) {
+            val personEmail = "person-email@mailosaur.com"
+            val extole = Extole.init(
+                "mobile-monitor.extole.io",
+                context = context, appName = "mobile-monitor", labels = setOf("business"),
+                data = mapOf("version" to "1.0"),
+                email = personEmail
+            )
 
-
-        val initialTimeStampValue = runBlocking {
             val (ctaZone, _) = extole.fetchZone("mobile_cta_timestamp")
-            val initialTimestampValue = ctaZone?.get("timestamp")
-            initialTimestampValue as Long
-        }
+            val initialTimeStampValue = ctaZone?.get("timestamp") as Long
 
-        runBlocking {
             extole.identify(BlackboxNameGenerator().getEmailAddress())
-        }
 
-        val timeStampValueAfterIdentify = runBlocking {
-            val (ctaZone, _) = extole.fetchZone("mobile_cta_timestamp")
-            val initialTimestampValue = ctaZone?.get("timestamp")
-            initialTimestampValue as Long
-        }
+            val (ctaZoneTimestamp, _) = extole.fetchZone("mobile_cta_timestamp")
+            val timeStampValueAfterIdentify = ctaZoneTimestamp?.get("timestamp") as Long
 
-        val initialTime = Instant.ofEpochSecond(initialTimeStampValue)
-        val timeAfterIdentify = Instant.ofEpochSecond(timeStampValueAfterIdentify)
-        assertThat(initialTime).isBefore(timeAfterIdentify)
+            val initialTime = Instant.ofEpochSecond(initialTimeStampValue)
+            val timeAfterIdentify = Instant.ofEpochSecond(timeStampValueAfterIdentify)
+            assertThat(initialTime).isBefore(timeAfterIdentify)
+        }
     }
 
     @Test
     fun testIdentifyJwtWillFlushCache() {
         val jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjUzNmQwNWE2LTMzZWUtNDI2NC04ODI2LW" +
-          "JhZDRjOTAyMWZhZiJ9.eyJpc3MiOiJtb2JpbGUtc2RrLmV4dG9sZS5jb20iLCJhdWQiOlsiZXh0b2xlLmNvbSJ" +
-          "dLCJlbWFpbCI6InNka3BlcnNvbi1lbWFpbEBtYWlsb3NhdXIuY29tIiwiaWF0IjoxNzA1NTg0Mjg0LCJleHAiO" +
-          "jI0ODMxODQyODR9.XdB5-j58GcEeKqKkCLd5f_G78CLLJIHCmsfcOpH-n3o"
+                "JhZDRjOTAyMWZhZiJ9.eyJpc3MiOiJtb2JpbGUtc2RrLmV4dG9sZS5jb20iLCJhdWQiOlsiZXh0b2xlLmNvbSJ" +
+                "dLCJlbWFpbCI6InNka3BlcnNvbi1lbWFpbEBtYWlsb3NhdXIuY29tIiwiaWF0IjoxNzA1NTg0Mjg0LCJleHAiO" +
+                "jI0ODMxODQyODR9.XdB5-j58GcEeKqKkCLd5f_G78CLLJIHCmsfcOpH-n3o"
         val extole =
             runBlocking {
                 return@runBlocking Extole.init(
@@ -314,9 +307,9 @@ class ExtoleSdkTests {
     @Test
     fun testIdentifyJwtWithoutEmail() {
         val jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjUzNmQwNWE2LTMzZWUtNDI2NC04ODI2" +
-          "LWJhZDRjOTAyMWZhZiJ9.eyJpc3MiOiJtb2JpbGUtc2RrLmV4dG9sZS5jb20iLCJhdWQiOlsiZXh0b2xlLmN" +
-          "vbSJdLCJpYXQiOjE3MDU5MjQwMDksImV4cCI6MjQ4MzUyNDAwOX0.X2GnR6OV9amojSLSzoXeecoujrnMzyY" +
-          "As5VWzR86U4M";
+                "LWJhZDRjOTAyMWZhZiJ9.eyJpc3MiOiJtb2JpbGUtc2RrLmV4dG9sZS5jb20iLCJhdWQiOlsiZXh0b2xlLmN" +
+                "vbSJdLCJpYXQiOjE3MDU5MjQwMDksImV4cCI6MjQ4MzUyNDAwOX0.X2GnR6OV9amojSLSzoXeecoujrnMzyY" +
+                "As5VWzR86U4M";
 
         val extole =
             runBlocking {
@@ -417,9 +410,9 @@ class ExtoleSdkTests {
     @Test
     fun testIdentifyJwtAtInit() {
         val jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjUzNmQwNWE2LTMzZWUtNDI2NC04ODI2LW" +
-          "JhZDRjOTAyMWZhZiJ9.eyJpc3MiOiJtb2JpbGUtc2RrLmV4dG9sZS5jb20iLCJhdWQiOlsiZXh0b2xlLmNvbSJ" +
-          "dLCJlbWFpbCI6InNka3BlcnNvbi1lbWFpbEBtYWlsb3NhdXIuY29tIiwiaWF0IjoxNzA1NTg0Mjg0LCJleHAiO" +
-          "jI0ODMxODQyODR9.XdB5-j58GcEeKqKkCLd5f_G78CLLJIHCmsfcOpH-n3o"
+                "JhZDRjOTAyMWZhZiJ9.eyJpc3MiOiJtb2JpbGUtc2RrLmV4dG9sZS5jb20iLCJhdWQiOlsiZXh0b2xlLmNvbSJ" +
+                "dLCJlbWFpbCI6InNka3BlcnNvbi1lbWFpbEBtYWlsb3NhdXIuY29tIiwiaWF0IjoxNzA1NTg0Mjg0LCJleHAiO" +
+                "jI0ODMxODQyODR9.XdB5-j58GcEeKqKkCLd5f_G78CLLJIHCmsfcOpH-n3o"
         val extole =
             runBlocking {
                 return@runBlocking Extole.init(
@@ -440,9 +433,9 @@ class ExtoleSdkTests {
     @Test
     fun testIdentifyJwtWithoutEmailAndEmailPassedAsASeparateParameter() {
         val jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjUzNmQwNWE2LTMzZWUtNDI2NC04ODI2" +
-          "LWJhZDRjOTAyMWZhZiJ9.eyJpc3MiOiJtb2JpbGUtc2RrLmV4dG9sZS5jb20iLCJhdWQiOlsiZXh0b2xlLmN" +
-          "vbSJdLCJpYXQiOjE3MDU5MjQwMDksImV4cCI6MjQ4MzUyNDAwOX0.X2GnR6OV9amojSLSzoXeecoujrnMzyY" +
-          "As5VWzR86U4M"
+                "LWJhZDRjOTAyMWZhZiJ9.eyJpc3MiOiJtb2JpbGUtc2RrLmV4dG9sZS5jb20iLCJhdWQiOlsiZXh0b2xlLmN" +
+                "vbSJdLCJpYXQiOjE3MDU5MjQwMDksImV4cCI6MjQ4MzUyNDAwOX0.X2GnR6OV9amojSLSzoXeecoujrnMzyY" +
+                "As5VWzR86U4M"
         val extole =
             runBlocking {
                 return@runBlocking Extole.init(

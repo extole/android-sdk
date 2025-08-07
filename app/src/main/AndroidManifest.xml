@@ -60,13 +60,10 @@
 
             <!-- Branch App Links -->
             <intent-filter android:autoVerify="true">
-                <data
-                  android:scheme="https"
-                  android:host="mobile-monitor.app.link" />
-                <!-- example-alternate domain is required for App Links when the Journeys/Web SDK and Deepviews are used inside your website.  -->
-                <data
-                  android:scheme="https"
-                  android:host="mobile-monitor-alternate.app.link" />
+                <data android:scheme="https" />
+                <data android:host="mobile-monitor.app.link" />
+                <data android:scheme="https" />
+                <data android:host="mobile-monitor-alternate.app.link" />
 
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

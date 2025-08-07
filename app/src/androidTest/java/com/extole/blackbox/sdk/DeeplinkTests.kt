@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.net.Uri
-import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -42,28 +41,15 @@ class DeeplinkTests {
 
     @Test
     fun testMobileApplicationIsHandlingDeeplink() {
-        simulateLinkClick("https://extole-monitor-android.extole.io/happy-advocate")
-        assureChromeBrowserConcentFlow();
-        val openWithExtoleOption = uiDevice.findObject(UiSelector().text("Extole"))
-        openWithExtoleOption.waitForExists(WAIT_FOR_ELEMENT_TIMEOUT)
-        if (openWithExtoleOption.exists()) {
-            openWithExtoleOption.click()
-            openWithExtoleOption.click()
-        } else {
-            val useJustOnceButton = uiDevice.findObject(UiSelector().textMatches("Just once"))
-            if (useJustOnceButton.exists()) {
-                useJustOnceButton.click()
-            }
-        }
+        simulateLinkClick("https://mobile-monitor.app.link/happy-advocate")
 
-        val retrieveRewardText =
-            uiDevice.findObject(UiSelector().textContains("Special thanks to your friend"))
-        retrieveRewardText.waitForExists(WAIT_FOR_ELEMENT_TIMEOUT)
+        val deeplinkPageText =
+            uiDevice.findObject(UiSelector().resourceId("com.extole:id/deeplink_text"))
+        deeplinkPageText.waitForExists(5L * 1000)
 
-        assertThat(retrieveRewardText.exists()).isTrue
+        assertThat(deeplinkPageText.exists()).isTrue
     }
 
-    @Ignore // Todo Save Failed Tests Screen ENG-21130
     @Test
     fun testOpenExtoleShareLinkWithDeeplinkEnabled() {
         simulateLinkClick("mobile-monitor://simple-deep-link")

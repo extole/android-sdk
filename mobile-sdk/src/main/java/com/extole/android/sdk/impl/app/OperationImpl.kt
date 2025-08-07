@@ -3,6 +3,7 @@ package com.extole.android.sdk.impl.app
 import com.extole.android.sdk.Action
 import com.extole.android.sdk.Condition
 import com.extole.android.sdk.Operation
+import com.extole.android.sdk.RestException
 import com.extole.android.sdk.impl.ExtoleInternal
 
 class OperationImpl(
@@ -12,11 +13,15 @@ class OperationImpl(
 
     override suspend fun executeActions(event: AppEvent, extole: ExtoleInternal) {
         actionsToExecute(event, extole).forEach {
-            if (!extole.getDisabledActions().contains(it.getType())) {
-                extole.getLogger().debug("Executing action ${it.getTitle()}")
-                it.execute(event, extole)
-            } else {
-                extole.getLogger().debug("Skipping ${it.getType()} because it is disabled")
+            try {
+                if (!extole.getDisabledActions().contains(it.getType())) {
+                    extole.getLogger().debug("Executing action ${it.getTitle()}")
+                    it.execute(event, extole)
+                } else {
+                    extole.getLogger().debug("Skipping ${it.getType()} because it is disabled")
+                }
+            } catch (e: RestException) {
+                extole.getLogger().debug("Error executing action ${it.getTitle()}: ${e.message}", e)
             }
         }
     }
