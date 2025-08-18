@@ -293,17 +293,6 @@ class ExtoleImpl(
         this.zonesResponse = Zones(mutableMapOf())
     }
 
-    /**
-     * Clear cache for a specific zone. Useful for debugging React Native caching issues.
-     */
-    override fun clearZoneCache(zoneName: String) {
-        val currentCache = zonesResponse.getAll().toMutableMap()
-        val keysToRemove = currentCache.keys.filter { it.zoneName == zoneName }
-        keysToRemove.forEach { currentCache.remove(it) }
-        this.zonesResponse = Zones(currentCache)
-        logger.debug("Cleared cache for zone: $zoneName")
-    }
-
     private fun subscribe() {
         configurationLoader?.let { operations.addAll(it(App, mapOf())) }
         if (configurationLoader == null) {
