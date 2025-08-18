@@ -48,14 +48,7 @@ interface Extole {
     fun getContext(): ApplicationContext
 
     /**
-     * Clear cache for a specific zone. Useful for debugging caching issues.
-     * @param zoneName - the name of the zone to clear from cache
-     */
-    fun clearZoneCache(zoneName: String)
-
-    /**
      * Used to send an event, the accessToken, headers and data associated with this instance
-     * of Extole will be included with the request
      * @param eventName - the name of the event that will be sent
      * @param data - additional data can be sent with the event
      * @return [Id]<[Event]> the ID of the event that was created

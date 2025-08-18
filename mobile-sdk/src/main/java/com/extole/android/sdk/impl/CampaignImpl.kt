@@ -116,10 +116,6 @@ class CampaignImpl(
         extole.logout()
     }
 
-    override fun clearZoneCache(zoneName: String) {
-        extole.clearZoneCache(zoneName)
-    }
-
     override suspend fun clone(
         programDomain: String?,
         appName: String?,
