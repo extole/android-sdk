@@ -82,19 +82,29 @@ class ExtoleImpl(
         zoneName: String,
         fethZoneData: Map<String, Any?>
     ): Pair<Zone, Campaign> {
+        val safeUserData = fethZoneData.toMutableMap()
+        
         val requestData = mutableMapOf<String, Any?>()
-        requestData.putAll(fethZoneData)
+        requestData.putAll(safeUserData)
         requestData.putAll(this.data)
-        EventBus.getDefault().post(AppEvent(zoneName, fethZoneData))
+        requestData["labels"] = labels.joinToString(",")
+        
+        logger.debug("fetchZone called with zoneName=$zoneName, userData=$safeUserData, requestData=$requestData")
+        
+        EventBus.getDefault().post(AppEvent(zoneName, safeUserData))
         val campaign: Campaign?
-        var zoneResponse = zonesResponse.get(zoneName, fethZoneData)
+        
+        var zoneResponse = zonesResponse.get(zoneName, requestData)
         if (zoneResponse == null) {
+            logger.debug("Cache miss for zone=$zoneName, making HTTP request")
             extoleServices.getZoneService()
-                .getZones(setOf(zoneName), fethZoneData, labels)
+                .getZones(setOf(zoneName), requestData, labels)
                 .getAll().forEach { response ->
                     response.value?.let { zonesResponse.add(response.key, it) }
                 }
-            zoneResponse = zonesResponse.get(zoneName, fethZoneData)
+            zoneResponse = zonesResponse.get(zoneName, requestData)
+        } else {
+            logger.debug("Cache hit for zone=$zoneName")
         }
 
         campaign = CampaignImpl(
@@ -281,6 +291,17 @@ class ExtoleImpl(
 
     private fun clearZonesCache() {
         this.zonesResponse = Zones(mutableMapOf())
+    }
+
+    /**
+     * Clear cache for a specific zone. Useful for debugging React Native caching issues.
+     */
+    override fun clearZoneCache(zoneName: String) {
+        val currentCache = zonesResponse.getAll().toMutableMap()
+        val keysToRemove = currentCache.keys.filter { it.zoneName == zoneName }
+        keysToRemove.forEach { currentCache.remove(it) }
+        this.zonesResponse = Zones(currentCache)
+        logger.debug("Cleared cache for zone: $zoneName")
     }
 
     private fun subscribe() {

@@ -474,4 +474,42 @@ class ExtoleSdkTests {
         assertThat(personEmail).isEqualTo("null")
     }
 
+    @Test
+    fun testFetchZoneWithDifferentClientKeysShouldNotReturnCachedResponse() {
+        runBlocking {
+            val extole = Extole.init(
+                "go.extole.io",
+                context = context, 
+                appName = "extole-mobile-test", 
+                labels = setOf("business"),
+                data = mapOf("version" to "1.0"), 
+                sandbox = "prod-prod"
+            )
+
+            val (zoneGo, campaignGo) = extole.fetchZone("go_configuration", mapOf("clientKey" to "Go"))
+            assertThat(zoneGo).isNotNull
+            assertThat(campaignGo).isNotNull
+
+            val goDomain = zoneGo?.content?.get("domain")
+            val goCampaignId = zoneGo?.campaignId?.id
+
+            val (zoneUc, campaignUc) = extole.fetchZone("go_configuration", mapOf("clientKey" to "Uc"))
+            assertThat(zoneUc).isNotNull
+            assertThat(campaignUc).isNotNull
+
+            val ucDomain = zoneUc?.content?.get("domain")
+            val ucCampaignId = zoneUc?.campaignId?.id
+
+            assertThat(goCampaignId).isEqualTo(ucCampaignId)
+            assertThat(goDomain).isNotEqualTo(ucDomain)
+
+            val (zoneGoCached, campaignGoCached) = extole.fetchZone("go_configuration", mapOf("clientKey" to "Go"))
+            assertThat(zoneGoCached).isNotNull
+            assertThat(campaignGoCached).isNotNull
+
+            assertThat(zoneGoCached?.content?.get("domain")).isEqualTo(goDomain)
+            assertThat(zoneGoCached?.content?.get("domain")).isNotEqualTo(ucDomain)
+        }
+    }
+
 }

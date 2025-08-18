@@ -68,6 +68,7 @@ data class LoadOperationsAction(
         )
         val allData = extole.getData().toMutableMap()
         allData.putAll(data ?: emptyMap())
+        allData["labels"] = extole.getLabels().joinToString(",")
         allData["device_id"] = deviceId
         allData["os"] = Build.VERSION.RELEASE
         return allData
