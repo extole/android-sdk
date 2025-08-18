@@ -40,6 +40,7 @@ data class FetchAction(
         val allData = extole.getData().toMutableMap()
         allData.putAll(data ?: emptyMap())
         allData["device_id"] = deviceId
+        allData["labels"] = extole.getLabels().joinToString(",")
         allData["os"] = Build.VERSION.RELEASE
         return allData
     }

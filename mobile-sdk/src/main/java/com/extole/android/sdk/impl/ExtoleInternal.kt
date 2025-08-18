@@ -80,4 +80,16 @@ interface ExtoleInternal : Extole {
     fun getOperations(): MutableList<Operation>
     fun getJsonConfiguration(): MutableList<JSONObject>
     fun getDisabledActions(): Set<Action.ActionType>
+
+    /**
+     * ApplicationContext represents the context where the Mobile SDK is used
+     * @return [ApplicationContext]
+     */
+    override fun getContext(): ApplicationContext
+
+    /**
+     * Clear cache for a specific zone. Useful for debugging caching issues.
+     * @param zoneName - the name of the zone to clear from cache
+     */
+    override fun clearZoneCache(zoneName: String)
 }
