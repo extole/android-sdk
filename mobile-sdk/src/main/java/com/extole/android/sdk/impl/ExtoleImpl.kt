@@ -1,6 +1,7 @@
 package com.extole.android.sdk.impl
 
 import android.content.pm.PackageManager
+import android.util.Log
 import android.webkit.WebView
 import com.extole.android.sdk.Action
 import com.extole.android.sdk.Campaign
@@ -27,7 +28,9 @@ import com.extole.android.sdk.randomAlphaNumericString
 import com.extole.webview.ExtoleWebViewImpl
 import kotlinx.coroutines.coroutineScope
 import org.greenrobot.eventbus.EventBus
+import org.json.JSONException
 import org.json.JSONObject
+import java.util.UUID
 
 class ExtoleImpl(
     private val programDomain: String,
@@ -40,7 +43,7 @@ class ExtoleImpl(
     val appHeaders: MutableMap<String, String> = mutableMapOf(),
     val identifier: String? = null,
     val listenToEvents: Boolean = true,
-    val additionalProtocolHandlers: List<ProtocolHandler>,
+    val additionalProtocolHandlers: List<ProtocolHandler> = emptyList(),
     private val configurationLoader: ((app: App, data: Map<String, Any>) -> List<Operation>)? = null,
     private val disabledActions: Set<Action.ActionType> = emptySet(),
     val jwt: String? = null
@@ -82,29 +85,19 @@ class ExtoleImpl(
         zoneName: String,
         fethZoneData: Map<String, Any?>
     ): Pair<Zone, Campaign> {
-        val safeUserData = fethZoneData.toMutableMap()
-        
         val requestData = mutableMapOf<String, Any?>()
-        requestData.putAll(safeUserData)
+        requestData.putAll(fethZoneData)
         requestData.putAll(this.data)
-        requestData["labels"] = labels.joinToString(",")
-        
-        logger.debug("fetchZone called with zoneName=$zoneName, userData=$safeUserData, requestData=$requestData")
-        
-        EventBus.getDefault().post(AppEvent(zoneName, safeUserData))
+        EventBus.getDefault().post(AppEvent(zoneName, fethZoneData))
         val campaign: Campaign?
-        
-        var zoneResponse = zonesResponse.get(zoneName, requestData)
+        var zoneResponse = zonesResponse.get(zoneName, fethZoneData)
         if (zoneResponse == null) {
-            logger.debug("Cache miss for zone=$zoneName, making HTTP request")
             extoleServices.getZoneService()
-                .getZones(setOf(zoneName), requestData, labels)
+                .getZones(setOf(zoneName), fethZoneData, labels)
                 .getAll().forEach { response ->
                     response.value?.let { zonesResponse.add(response.key, it) }
                 }
-            zoneResponse = zonesResponse.get(zoneName, requestData)
-        } else {
-            logger.debug("Cache hit for zone=$zoneName")
+            zoneResponse = zonesResponse.get(zoneName, fethZoneData)
         }
 
         campaign = CampaignImpl(
@@ -143,11 +136,17 @@ class ExtoleImpl(
                 .filter { it.key != null }
                 .filter {
                     it.key.lowercase() == ACCESS_TOKEN_HEADER_NAME
-                }.map { it.value }.flatten().first()
-            if (accessTokenHeader.isNotBlank() && accessTokenHeader != accessToken) {
+                }.map { it.value }.flatten().firstOrNull()
+            if (accessTokenHeader?.isNotBlank() == true && accessTokenHeader != accessToken) {
                 clearZonesCache()
                 setAccessToken(accessTokenHeader)
                 EventBus.getDefault().post(AppEvent(ACCESS_TOKEN_CHANGED_EVENT_NAME))
+            }
+            if (httpPostResult.entity.isNull("id")) {
+                Log.e(
+                    "Extole",
+                    "Event ID is null for event $eventName, check your programDomain and your configuration"
+                )
             }
             return Id(httpPostResult.entity.getString("id"))
         } catch (exception: RestException) {
@@ -252,7 +251,8 @@ class ExtoleImpl(
     }
 
     private fun initApiClient(identifier: String? = null, jwt: String? = null) {
-        val androidLogger = ExtoleLogger.builder().build()
+        val androidLogger = ExtoleLogger.builder()
+            .withProgramDomain(programDomain).build()
         androidLogger.debug("Initialized Extole for programDomain=$programDomain")
         accessToken = context.getPersistence().get(ACCESS_TOKEN_PREFERENCES_KEY)
         tokenApi = AuthorizationEndpoints(programDomain, accessToken, getHeaders())
@@ -274,8 +274,24 @@ class ExtoleImpl(
     }
 
     private fun createAccessToken(identifier: String? = null, jwt: String? = null) {
-        val accessToken = tokenApi.createToken(identifier, jwt).entity.getString(ACCESS_TOKEN)
-        setAccessToken(accessToken)
+        try {
+            val accessToken = tokenApi.createToken(identifier, jwt).entity.getString(ACCESS_TOKEN)
+            setAccessToken(accessToken)
+        } catch (e: JSONException) {
+            logger.error(
+                e,
+                "Unable to create access token for " +
+                        "programDomain=$programDomain, identifier=$identifier"
+            )
+            throw RestException(
+                UUID.randomUUID().toString(),
+                "500",
+                "COMMUNICATION_ERROR",
+                "Unable to create access token for " +
+                        "programDomain=$programDomain, identifier=$identifier",
+                mapOf()
+            )
+        }
     }
 
     private fun setAccessToken(accessToken: String?) {

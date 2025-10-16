@@ -26,7 +26,6 @@ class ZonesEndpoints(
             .buildUpon()
         val httpRequest =
             endpoints.createHttpRequest("${urlBuilder.build()}/$eventName", METHOD_POST)
-        val response = httpRequest.send(jsonObject.toString())
-        return endpoints.handleResponse(response)
+        return endpoints.executeRequest(httpRequest, jsonObject)
     }
 }

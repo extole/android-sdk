@@ -29,6 +29,6 @@ class MeRewardEndpoints(
 
         val requestUrl = HttpRequest.encode(HttpRequest.append(baseUrl, params))
         val httpRequest = endpoints.createHttpRequest(requestUrl, METHOD_GET)
-        return endpoints.handleResponse(httpRequest)
+        return endpoints.executeRequest(httpRequest)
     }
 }

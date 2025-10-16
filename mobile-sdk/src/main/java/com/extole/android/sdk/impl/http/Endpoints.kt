@@ -2,21 +2,39 @@ package com.extole.android.sdk.impl.http
 
 import com.extole.android.sdk.RestException
 import com.extole.android.sdk.impl.ResponseEntity
+import com.extole.android.sdk.impl.http.HttpRequest.HttpRequestException
 import org.json.JSONObject
 
 class Endpoints(
     val accessToken: String?,
     val headers: Map<String, String> = emptyMap()
 ) {
-    fun handleResponse(httpRequest: HttpRequest): ResponseEntity<JSONObject> {
-        if (httpRequest.ok() || httpRequest.created() || httpRequest.noContent()) {
-            return ResponseEntity(
-                JSONObject(httpRequest.body()),
-                httpRequest.headers(),
-                httpRequest.code()
+    @Throws(RestException::class)
+    fun executeRequest(
+        httpRequest: HttpRequest,
+        body: JSONObject? = null
+    ): ResponseEntity<JSONObject> {
+        try {
+            var resultBody: String?
+            if (body != null) {
+                resultBody = httpRequest.send(body.toString()).body()
+            } else {
+                resultBody = httpRequest.body()
+            }
+            if (httpRequest.ok() || httpRequest.created() || httpRequest.noContent()) {
+                return ResponseEntity(
+                    JSONObject(resultBody.ifBlank { "{}" }),
+                    httpRequest.headers(),
+                    httpRequest.code()
+                )
+            } else {
+                throw handleException(httpRequest)
+            }
+        } catch (e: HttpRequestException) {
+            throw RestException(
+                "http_request_exception", "500", "http_request_exception", e.message
+                    ?: "HttpRequestException", emptyMap()
             )
-        } else {
-            throw handleException(httpRequest)
         }
     }
 
