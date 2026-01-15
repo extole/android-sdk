@@ -18,7 +18,6 @@ class CreativeLoggingEndpoints(val programDomain: String, val accessToken: Strin
         val httpRequest = endpoints.createHttpRequest(baseUrl, METHOD_POST)
         jsonObject.put("level", level)
         jsonObject.put("message", message)
-        val response = httpRequest.send(jsonObject.toString())
-        return endpoints.handleResponse(response)
+        return endpoints.executeRequest(httpRequest, jsonObject)
     }
 }

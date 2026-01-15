@@ -19,7 +19,6 @@ class EventEndpoints(
     fun post(data: Map<String, Any?>): ResponseEntity<JSONObject> {
         val jsonObject = JSONObject(data.toMutableMap())
         val httpRequest = endpoints.createHttpRequest(baseUrl, METHOD_POST)
-        val response = httpRequest.send(jsonObject.toString())
-        return endpoints.handleResponse(response)
+        return endpoints.executeRequest(httpRequest, jsonObject)
     }
 }

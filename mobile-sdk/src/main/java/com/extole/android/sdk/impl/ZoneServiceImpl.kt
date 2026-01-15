@@ -23,9 +23,14 @@ class ZoneServiceImpl(val extole: ExtoleInternal) :
         data: Map<String, Any?>,
         programLabels: Set<String>,
     ): Zones = coroutineScope {
+        val labels = programLabels.joinToString(",")
         val prefetchedResponses = mutableMapOf<ZoneResponseKey, Zone?>()
+        val requestData = mutableMapOf<String, Any?>()
+        requestData.putAll(data)
+        requestData["labels"] = labels
+
         val zoneResponses = zonesName.map { zoneName ->
-            async { getZone(zoneName, data) }
+            async { getZone(zoneName, requestData) }
         }.awaitAll()
 
         zoneResponses.forEach { zoneResponse ->

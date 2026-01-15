@@ -1,6 +1,7 @@
 package com.extole.android.sdk.impl.http
 
 import android.net.Uri
+import com.extole.android.sdk.RestException
 import com.extole.android.sdk.impl.ResponseEntity
 import com.extole.android.sdk.impl.http.HttpRequest.METHOD_GET
 import com.extole.android.sdk.impl.http.HttpRequest.METHOD_POST
@@ -17,18 +18,19 @@ class AuthorizationEndpoints(
         .appendEncodedPath("api/v5/token")
         .build().toString()
 
+    @Throws(RestException::class)
     fun getTokenDetails(queryParams: Map<String?, Any?>?): ResponseEntity<JSONObject> {
         val requestUrl = HttpRequest.encode(HttpRequest.append(baseUrl, queryParams))
         val httpRequest = endpoints.createHttpRequest(requestUrl, METHOD_GET)
-        return endpoints.handleResponse(httpRequest)
+        return endpoints.executeRequest(httpRequest)
     }
 
+    @Throws(RestException::class)
     fun createToken(email: String?, jwt: String?): ResponseEntity<JSONObject> {
         val body = JSONObject()
         val httpRequest = endpoints.createHttpRequest(baseUrl, METHOD_POST)
         email?.let { body.put("email", it) }
         jwt?.let { body.put("jwt", it) }
-        httpRequest.send(body.toString())
-        return endpoints.handleResponse(httpRequest)
+        return endpoints.executeRequest(httpRequest, body)
     }
 }
