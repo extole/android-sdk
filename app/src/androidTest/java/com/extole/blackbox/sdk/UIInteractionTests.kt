@@ -214,7 +214,7 @@ class UIInteractionTests {
         emailInput.waitForExists(WAIT_FOR_ELEMENT_TIMEOUT)
         emailInput.click()
         emailInput.clearTextField()
-        emailInput.text = BlackboxNameGenerator().getEmailAddress()
+        emailInput.setText(BlackboxNameGenerator().getEmailAddress())
 
         val anotherElement =
             uiDevice.findObject(UiSelector().textStartsWith("Enter"))

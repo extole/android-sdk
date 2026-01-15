@@ -33,12 +33,13 @@ class DeeplinkActivity : AppCompatActivity() {
         intent.putExtra("branch_force_new_session", true)
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        if (intent != null &&
-            intent.hasExtra("branch_force_new_session") &&
-            intent.getBooleanExtra("branch_force_new_session", true)
+        if (intent.hasExtra("branch_force_new_session") && intent.getBooleanExtra(
+                "branch_force_new_session",
+                true
+            )
         ) {
             Branch.sessionBuilder(this).withCallback(branchReferralInitListener).reInit()
         }
