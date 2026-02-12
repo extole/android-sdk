@@ -1,6 +1,7 @@
 package com.extole.blackbox.sdk
 
 import android.content.Context
+import android.webkit.WebView
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.extole.android.sdk.Extole
@@ -22,6 +23,19 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.Instant
 
+
+private class RecordingWebView(context: Context) : WebView(context) {
+    var lastLoadedUrl: String? = null
+        private set
+
+    override fun loadUrl(url: String) {
+        lastLoadedUrl = url
+    }
+
+    override fun loadUrl(url: String, additionalHttpHeaders: MutableMap<String, String>) {
+        lastLoadedUrl = url
+    }
+}
 
 @RunWith(AndroidJUnit4::class)
 class ExtoleSdkTests {
@@ -82,6 +96,46 @@ class ExtoleSdkTests {
             assertThat(ctaZone?.campaignId).isNotNull
             assertThat(ctaZone?.campaignId?.id).isEqualTo("7153581844297128803")
             assertThat(ctaZone?.get("title")).isEqualTo("CTA Item")
+        }
+    }
+
+    @Test
+    fun testCampaignWebViewReceivesCorrectTargetQueryParameter() {
+        runBlocking {
+            val extole =
+                Extole.init(
+                    "mobile-monitor.extole.io",
+                    context = context,
+                    appName = "extole-mobile-test",
+                    labels = setOf("business"),
+                    data = mapOf("version" to "1.0"),
+                    sandbox = "prod-test"
+                )
+
+            val (zone, campaign) = extole.fetchZone("mobile_cta")
+            assertThat(zone).isNotNull
+            assertThat(campaign).isNotNull
+
+            val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
+            val webViewData = mapOf("target" to "campaign_id:${campaign.getId()}")
+            var recordingWebView: RecordingWebView? = null
+            InstrumentationRegistry.getInstrumentation().runOnMainSync {
+                recordingWebView = RecordingWebView(targetContext)
+                val extoleWebView = campaign.webView(recordingWebView!!, emptyMap(), webViewData)
+                extoleWebView.load("mobile_cta")
+            }
+
+            val url = recordingWebView!!.lastLoadedUrl ?: throw AssertionError("loadUrl was not called")
+
+            val expectedCampaignId = zone!!.campaignId.id
+            val correctTargetEncoded = "target=campaign_id%3A$expectedCampaignId"
+            assertThat(url)
+                .describedAs("WebView URL should contain target with campaign_id and raw id value")
+                .contains(correctTargetEncoded)
+
+            assertThat(url)
+                .describedAs("WebView URL must not contain Id( serialization (wrong format)")
+                .doesNotContain("Id%28")
         }
     }
 
