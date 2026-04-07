@@ -46,7 +46,8 @@ class ExtoleImpl(
     val additionalProtocolHandlers: List<ProtocolHandler> = emptyList(),
     private val configurationLoader: ((app: App, data: Map<String, Any>) -> List<Operation>)? = null,
     private val disabledActions: Set<Action.ActionType> = emptySet(),
-    val jwt: String? = null
+    val jwt: String? = null,
+    zonesCacheEnabled: Boolean = true
 ) : ExtoleInternal {
 
     companion object {
@@ -66,6 +67,7 @@ class ExtoleImpl(
     private var operations: MutableList<Operation> = mutableListOf()
     private var configuration: MutableList<JSONObject> = mutableListOf()
     private var zonesResponse: Zones = Zones(mutableMapOf())
+    private var zonesCacheEnabled: Boolean = zonesCacheEnabled
     private lateinit var extoleServices: ExtoleServicesImpl
     private val flowController = App
     private var logger: ExtoleLogger = ExtoleLoggerImpl()
@@ -90,14 +92,16 @@ class ExtoleImpl(
         requestData.putAll(this.data)
         EventBus.getDefault().post(AppEvent(zoneName, fethZoneData))
         val campaign: Campaign?
-        var zoneResponse = zonesResponse.get(zoneName, fethZoneData)
+        var zoneResponse = if (zonesCacheEnabled) zonesResponse.get(zoneName, fethZoneData) else null
         if (zoneResponse == null) {
-            extoleServices.getZoneService()
+            val fetched = extoleServices.getZoneService()
                 .getZones(setOf(zoneName), fethZoneData, labels)
-                .getAll().forEach { response ->
+            if (zonesCacheEnabled) {
+                fetched.getAll().forEach { response ->
                     response.value?.let { zonesResponse.add(response.key, it) }
                 }
-            zoneResponse = zonesResponse.get(zoneName, fethZoneData)
+            }
+            zoneResponse = fetched.get(zoneName, fethZoneData)
         }
 
         campaign = CampaignImpl(
@@ -111,6 +115,12 @@ class ExtoleImpl(
     override fun getLogger(): ExtoleLogger {
         return logger
     }
+
+    override fun setZonesCacheEnabled(enabled: Boolean) {
+        zonesCacheEnabled = enabled
+    }
+
+    override fun isZonesCacheEnabled(): Boolean = zonesCacheEnabled
 
     override fun getContext(): ApplicationContext = context
 
@@ -212,7 +222,9 @@ class ExtoleImpl(
             listenToEvents,
             additionalProtocolHandlers,
             configurationLoader,
-            this.disabledActions
+            this.disabledActions,
+            this.jwt,
+            this.zonesCacheEnabled
         )
         extole.refresh()
         return extole

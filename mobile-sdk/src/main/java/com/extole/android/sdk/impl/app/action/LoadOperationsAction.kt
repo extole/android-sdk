@@ -20,6 +20,8 @@ data class LoadOperationsAction(
     @SerializedName("data") val data: Map<String, String>? = emptyMap(),
 ) : Action {
     companion object {
+        private const val MOBILE_BOOTSTRAP_ZONE = "mobile_bootstrap"
+        private const val ZONE_CACHE_ENABLED_PATH = "configuration.zone_cache_enabled"
         var loadOperationActions = HashSet<LoadOperationsAction>()
     }
 
@@ -34,8 +36,13 @@ data class LoadOperationsAction(
                 extole.getLabels()
             )
             loadedContent.getAll().forEach { entry ->
-                entry.value?.let {
-                    val operationsZonesContent = it.get("operations")
+                entry.value?.let { zone ->
+                    if (zone.getName() == MOBILE_BOOTSTRAP_ZONE) {
+                        (zone.get(ZONE_CACHE_ENABLED_PATH) as? Boolean)?.let { enabled ->
+                            extole.setZonesCacheEnabled(enabled)
+                        }
+                    }
+                    val operationsZonesContent = zone.get("operations")
                     if (operationsZonesContent != null) {
                         val operations =
                             JsonOperations(operationsZonesContent as List<Map<String, Any?>>)

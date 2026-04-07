@@ -149,7 +149,14 @@ interface Extole {
             configurationLoader: ((app: App, data: Map<String, Any>) -> List<Operation>)? = null,
             additionalProtocolHandlers: List<ProtocolHandler> = emptyList(),
             disabledActions: Set<Action.ActionType> = emptySet(),
-            jwt: String? = null
+            jwt: String? = null,
+            /**
+             * When true (default), zone responses are cached in memory and reused for subsequent
+             * [fetchZone] calls. When false, every zone fetch goes to the network and the cache
+             * is not used or updated. This is the only way to control zones cache from the public
+             * API; the value can still be overridden by the mobile_bootstrap zone configuration.
+             */
+            zonesCacheEnabled: Boolean = true
         ): Extole {
             return withContext(Dispatchers.IO) {
                 return@withContext ExtoleInternal.init(
@@ -166,7 +173,8 @@ interface Extole {
                     configurationLoader,
                     additionalProtocolHandlers,
                     disabledActions,
-                    jwt
+                    jwt,
+                    zonesCacheEnabled
                 )
             }
         }

@@ -387,6 +387,26 @@ class AppEngineTests {
         }
     }
 
+    @Test
+    fun testFetchActionDoesNotPopulateCacheWhenZonesCacheDisabled() {
+        runBlocking {
+            val extole = ExtoleInternal.init(
+                "mobile-monitor.extole.io",
+                context = context,
+                appName = "extole-mobile-test",
+                labels = setOf("business"),
+                data = mapOf("version" to "1.0"),
+                sandbox = "prod-test"
+            )
+            extole.setZonesCacheEnabled(false)
+            assertThat(extole.getZonesResponse().getAll()).isEmpty()
+
+            FetchAction(listOf("mobile_cta")).execute(AppEvent("test"), extole)
+
+            assertThat(extole.getZonesResponse().getAll()).isEmpty()
+        }
+    }
+
     private fun flowWithoutConditionsLoader(): (app: App, data: Map<String, Any>) -> List<Operation> {
         return { _, _ ->
             val operationsJson = """

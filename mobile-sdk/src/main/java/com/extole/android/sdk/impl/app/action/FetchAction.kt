@@ -26,7 +26,11 @@ data class FetchAction(
                 extole.getLabels()
             )
             prefetchedZones.getAll().forEach { entry ->
-                entry.value?.let { extole.getZonesResponse().add(entry.key, it) }
+                entry.value?.let { zone ->
+                    if (extole.isZonesCacheEnabled()) {
+                        extole.getZonesResponse().add(entry.key, zone)
+                    }
+                }
             }
         }
     }

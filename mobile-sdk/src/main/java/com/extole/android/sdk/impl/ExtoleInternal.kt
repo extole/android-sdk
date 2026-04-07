@@ -27,7 +27,8 @@ interface ExtoleInternal : Extole {
             configurationLoader: ((app: App, data: Map<String, Any>) -> List<Operation>)? = null,
             additionalProtocolHandlers: List<ProtocolHandler> = emptyList(),
             disabledActions: Set<Action.ActionType> = emptySet(),
-            jwt: String? = null
+            jwt: String? = null,
+            zonesCacheEnabled: Boolean = true
         ): ExtoleInternal {
             val applicationContext =
                 ApplicationContext(context, SharedPreferencesPersistence(context))
@@ -45,7 +46,8 @@ interface ExtoleInternal : Extole {
                 additionalProtocolHandlers,
                 configurationLoader,
                 disabledActions,
-                jwt
+                jwt,
+                zonesCacheEnabled
             )
             return extole
         }
@@ -70,6 +72,8 @@ interface ExtoleInternal : Extole {
     }
 
     fun setLogger(logger: ExtoleLogger)
+    fun setZonesCacheEnabled(enabled: Boolean)
+    fun isZonesCacheEnabled(): Boolean
 
     fun getHeaders(): Map<String, String>
     fun getLabels(): Set<String>

@@ -5,6 +5,7 @@ import android.webkit.WebView
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.extole.android.sdk.Extole
+import com.extole.android.sdk.impl.ExtoleInternal
 import com.extole.blackbox.BlackboxNameGenerator
 import com.extole.blackbox.RestException
 import kotlinx.coroutines.CoroutineScope
@@ -96,6 +97,123 @@ class ExtoleSdkTests {
             assertThat(ctaZone?.campaignId).isNotNull
             assertThat(ctaZone?.campaignId?.id).isEqualTo("7153581844297128803")
             assertThat(ctaZone?.get("title")).isEqualTo("CTA Item")
+        }
+    }
+
+    @Test
+    fun testZonesCacheEnabledDefaultsToTrue() {
+        runBlocking {
+            val extole = Extole.init(
+                "mobile-monitor.extole.io",
+                context = context,
+                appName = "extole-mobile-test",
+                labels = setOf("business"),
+                data = mapOf("version" to "1.0"),
+                sandbox = "prod-test"
+            )
+            val extoleInternal = extole as ExtoleInternal
+            assertThat(extoleInternal.isZonesCacheEnabled()).isTrue()
+        }
+    }
+
+    @Test
+    fun testInitWithZonesCacheEnabledFalseSetsFlagToFalse() {
+        runBlocking {
+            val extole = Extole.init(
+                "mobile-monitor.extole.io",
+                context = context,
+                appName = "extole-mobile-test",
+                labels = setOf("business"),
+                data = mapOf("version" to "1.0"),
+                sandbox = "prod-test",
+                zonesCacheEnabled = false
+            )
+            val extoleInternal = extole as ExtoleInternal
+            assertThat(extoleInternal.isZonesCacheEnabled()).isFalse()
+        }
+    }
+
+    @Test
+    fun testInitWithZonesCacheEnabledFalseFetchZoneDoesNotPopulateCache() {
+        runBlocking {
+            val extole = Extole.init(
+                "mobile-monitor.extole.io",
+                context = context,
+                appName = "extole-mobile-test",
+                labels = setOf("business"),
+                data = mapOf("version" to "1.0"),
+                sandbox = "prod-test",
+                zonesCacheEnabled = false
+            )
+            val extoleInternal = extole as ExtoleInternal
+            assertThat(extoleInternal.getZonesResponse().getAll()).isEmpty()
+            val zoneData = emptyMap<String, Any?>()
+            extole.fetchZone("mobile_cta", zoneData)
+            assertThat(extoleInternal.getZonesResponse().getAll()).isEmpty()
+            val (zone, _) = extole.fetchZone("mobile_cta", zoneData)
+            assertThat(zone).isNotNull
+        }
+    }
+
+    @Test
+    fun testSetZonesCacheEnabledUpdatesFlag() {
+        runBlocking {
+            val extole = Extole.init(
+                "mobile-monitor.extole.io",
+                context = context,
+                appName = "extole-mobile-test",
+                labels = setOf("business"),
+                data = mapOf("version" to "1.0"),
+                sandbox = "prod-test"
+            )
+            val extoleInternal = extole as ExtoleInternal
+            extoleInternal.setZonesCacheEnabled(false)
+            assertThat(extoleInternal.isZonesCacheEnabled()).isFalse()
+            extoleInternal.setZonesCacheEnabled(true)
+            assertThat(extoleInternal.isZonesCacheEnabled()).isTrue()
+        }
+    }
+
+    @Test
+    fun testFetchZonePopulatesCacheWhenEnabled() {
+        runBlocking {
+            val extole = Extole.init(
+                "mobile-monitor.extole.io",
+                context = context,
+                appName = "extole-mobile-test",
+                labels = setOf("business"),
+                data = mapOf("version" to "1.0"),
+                sandbox = "prod-test"
+            )
+            val extoleInternal = extole as ExtoleInternal
+            assertThat(extoleInternal.isZonesCacheEnabled()).isTrue()
+            val zoneData = emptyMap<String, Any?>()
+            extole.fetchZone("mobile_cta", zoneData)
+            val cached = extoleInternal.getZonesResponse().get("mobile_cta", zoneData)
+            assertThat(cached).isNotNull
+            assertThat(cached?.get("title")).isEqualTo("CTA Item")
+        }
+    }
+
+    @Test
+    fun testFetchZoneDoesNotPopulateCacheWhenDisabled() {
+        runBlocking {
+            val extole = Extole.init(
+                "mobile-monitor.extole.io",
+                context = context,
+                appName = "extole-mobile-test",
+                labels = setOf("business"),
+                data = mapOf("version" to "1.0"),
+                sandbox = "prod-test"
+            )
+            val extoleInternal = extole as ExtoleInternal
+            extoleInternal.setZonesCacheEnabled(false)
+            assertThat(extoleInternal.getZonesResponse().getAll()).isEmpty()
+            val zoneData = emptyMap<String, Any?>()
+            extole.fetchZone("mobile_cta", zoneData)
+            assertThat(extoleInternal.getZonesResponse().getAll()).isEmpty()
+            val (zone, _) = extole.fetchZone("mobile_cta", zoneData)
+            assertThat(zone).isNotNull
         }
     }
 
