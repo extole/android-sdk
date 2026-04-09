@@ -30,7 +30,11 @@ class ExtoleLoggerImpl(private val logLevel: LogLevel = LogLevel.ERROR) : Extole
     }
 
     override fun error(exception: Throwable, message: String, vararg args: Any?) {
-        Logger.e(exception, message, args)
+        val shouldSuppressRemoteUpload =
+            NetworkConnectivityErrorFilter.shouldSuppressRemoteUpload(exception)
+        RemoteLogUploadContext.withSuppressedRemoteUpload(shouldSuppressRemoteUpload) {
+            Logger.e(exception, message, args)
+        }
     }
 
     override fun getLogLevel(): LogLevel = logLevel

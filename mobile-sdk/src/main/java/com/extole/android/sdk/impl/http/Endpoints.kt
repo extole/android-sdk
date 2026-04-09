@@ -33,7 +33,7 @@ class Endpoints(
         } catch (e: HttpRequestException) {
             throw RestException(
                 "http_request_exception", "500", "http_request_exception", e.message
-                    ?: "HttpRequestException", emptyMap()
+                    ?: "HttpRequestException", emptyMap(), e
             )
         }
     }

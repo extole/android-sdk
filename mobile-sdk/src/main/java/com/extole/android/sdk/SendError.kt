@@ -5,5 +5,6 @@ class SendError(
     override val errorCode: String,
     override val httpStatusCode: String,
     override val message: String,
-    override val parameters: Map<String, Any>
-) : RestException(uniqueId, errorCode, httpStatusCode, message, parameters)
+    override val parameters: Map<String, Any>,
+    cause: Throwable? = null
+) : RestException(uniqueId, errorCode, httpStatusCode, message, parameters, cause)

@@ -169,7 +169,8 @@ class ExtoleImpl(
                 exception.errorCode,
                 exception.httpStatusCode,
                 exception.message,
-                exception.parameters
+                exception.parameters,
+                exception
             )
         }
     }

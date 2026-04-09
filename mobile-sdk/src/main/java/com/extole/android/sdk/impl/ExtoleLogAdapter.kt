@@ -16,6 +16,9 @@ open class ExtoleLogAdapter(
     }
 
     override fun log(priority: Int, tag: String?, message: String) {
+        if (RemoteLogUploadContext.shouldSuppressRemoteUpload()) {
+            return
+        }
         logSender(priority, tag, message)
     }
 }

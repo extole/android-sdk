@@ -99,7 +99,8 @@ class CampaignImpl(
                 exception.errorCode,
                 exception.httpStatusCode,
                 exception.message,
-                exception.parameters
+                exception.parameters,
+                exception
             )
         }
     }
