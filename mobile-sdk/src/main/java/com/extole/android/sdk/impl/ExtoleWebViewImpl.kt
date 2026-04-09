@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.IntentSender
+import android.content.pm.ApplicationInfo
 import android.net.Uri
 import android.net.http.SslError
 import android.webkit.SslErrorHandler
@@ -42,9 +43,15 @@ class ExtoleWebViewImpl(
             TelProtocolHandler(),
             MailtoProtocolHandler()
         )
+
+        fun isApplicationDebuggable(context: ApplicationContext): Boolean {
+            val flags = context.getApplicationInfo()?.flags ?: 0
+            return flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+        }
     }
 
     init {
+        WebView.setWebContentsDebuggingEnabled(isApplicationDebuggable(context))
         webView.isVerticalScrollBarEnabled = true
         webView.isHorizontalScrollBarEnabled = true
         webView.settings.javaScriptEnabled = true

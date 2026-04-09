@@ -5,9 +5,11 @@ import android.webkit.WebView
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.extole.android.sdk.Extole
+import com.extole.android.sdk.impl.ApplicationContext
 import com.extole.android.sdk.impl.ExtoleInternal
 import com.extole.blackbox.BlackboxNameGenerator
 import com.extole.blackbox.RestException
+import com.extole.webview.ExtoleWebViewImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -681,6 +683,41 @@ class ExtoleSdkTests {
             ctaZone?.get("email").toString()
         }
         assertThat(personEmail).isEqualTo("null")
+    }
+
+    @Test
+    fun testWebViewIsDebuggableInDebugBuild() {
+        val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val applicationContext = ApplicationContext(targetContext, null)
+        assertThat(ExtoleWebViewImpl.isApplicationDebuggable(applicationContext)).isTrue()
+    }
+
+    @Test
+    fun testWebViewDebuggingIsEnabledWhenCreatedViaCampaign() {
+        runBlocking {
+            val extole = Extole.init(
+                "mobile-monitor.extole.io",
+                context = context,
+                appName = "extole-mobile-test",
+                labels = setOf("business"),
+                data = mapOf("version" to "1.0"),
+                sandbox = "prod-test"
+            )
+
+            val (zone, campaign) = extole.fetchZone("mobile_cta")
+            assertThat(zone).isNotNull
+            assertThat(campaign).isNotNull
+
+            val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
+            InstrumentationRegistry.getInstrumentation().runOnMainSync {
+                val webView = RecordingWebView(targetContext)
+                val extoleWebView = campaign.webView(webView)
+                assertThat(extoleWebView).isNotNull
+            }
+
+            val applicationContext = ApplicationContext(targetContext, null)
+            assertThat(ExtoleWebViewImpl.isApplicationDebuggable(applicationContext)).isTrue()
+        }
     }
 
 }

@@ -199,6 +199,40 @@ class CustomAction(@Se±rializedName("custom_action_value") val customParameter:
 Extole.registerAction("CUSTOM_ACTION", CustomAction::class.java)
 ```
 
+## Debugging the WebView
+
+The SDK automatically enables WebView debugging when your app is built with `debuggable = true` (the default for debug builds). This lets you inspect the WebView content using Chrome DevTools.
+
+### Prerequisites
+- A debug build of your app (release builds disable WebView debugging for security)
+- Chrome browser on your desktop
+- Android device or emulator connected via USB (with USB debugging enabled)
+
+### Steps
+1. Run your debug build on the device or emulator.
+2. Open Chrome on your desktop and navigate to `chrome://inspect`.
+3. Your device should appear under **Remote Target**. Any active ExtoleWebView instances will be listed.
+4. Click **inspect** to open DevTools for the WebView.
+
+You can use the full Chrome DevTools feature set: Elements panel, Console, Network tab, etc.
+
+### How It Works
+The SDK reads the standard `android:debuggable` flag from your app's `ApplicationInfo`. In debug builds, Gradle sets this flag automatically, and the SDK calls `WebView.setWebContentsDebuggingEnabled(true)`. In release builds, the flag is not set and WebView debugging remains disabled.
+
+If you need to explicitly control the flag, set it in your `build.gradle`:
+```
+android {
+    buildTypes {
+        debug {
+            debuggable true  // default for debug builds
+        }
+        release {
+            debuggable false // default for release builds
+        }
+    }
+}
+```
+
 ## Appendix
 ### Advanced Actions
 #### Load Operations
