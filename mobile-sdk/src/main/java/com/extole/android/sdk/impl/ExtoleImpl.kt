@@ -270,7 +270,7 @@ class ExtoleImpl(
         accessToken = context.getPersistence().get(ACCESS_TOKEN_PREFERENCES_KEY)
         tokenApi = AuthorizationEndpoints(programDomain, accessToken, getHeaders())
         try {
-            if (accessToken == null || identifier != null) {
+            if (accessToken == null || identifier != null || jwt != null) {
                 createAccessToken(identifier, jwt)
             } else {
                 tokenApi.getTokenDetails(mapOf(ACCESS_TOKEN to accessToken))
