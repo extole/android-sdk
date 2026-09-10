@@ -11,13 +11,14 @@ import android.net.http.SslError
 import android.webkit.SslErrorHandler
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.extole.android.sdk.Extole
 import com.extole.android.sdk.Extole.Companion.PARTNER_SHARE_ID_PREFERENCES_KEY
 import com.extole.android.sdk.ExtoleWebView
 import com.extole.android.sdk.ProtocolHandler
 import com.extole.android.sdk.impl.ApplicationContext
+import com.extole.android.sdk.impl.ExtoleInternal
 import com.extole.android.sdk.impl.ExtoleShareBroadcastReceiver
 import com.extole.android.sdk.impl.JsExtoleShareImpl
 import com.extole.android.sdk.impl.protocol.handlers.MailtoProtocolHandler
@@ -31,7 +32,7 @@ class ExtoleWebViewImpl(
     private val programDomain: String,
     private val webView: WebView,
     private val context: ApplicationContext,
-    private val extole: Extole,
+    private val extole: ExtoleInternal,
     private val headers: Map<String, String>,
     private val queryParameters: Map<String, String>,
     private val protocolHandlers: List<ProtocolHandler> = emptyList()
@@ -55,6 +56,7 @@ class ExtoleWebViewImpl(
         webView.isVerticalScrollBarEnabled = true
         webView.isHorizontalScrollBarEnabled = true
         webView.settings.javaScriptEnabled = true
+        webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
         webView.addJavascriptInterface(
             JsExtoleShareImpl(
                 context.getAppContext(), getPartnerShareId(),
@@ -110,7 +112,15 @@ class ExtoleWebViewImpl(
         queryParameters.forEach {
             uriBuilder.appendQueryParameter(it.key, it.value)
         }
-        webView.loadUrl(uriBuilder.build().toString(), headers)
+        webView.loadUrl(uriBuilder.build().toString(), authorizedHeaders())
+    }
+
+    private fun authorizedHeaders(): Map<String, String> {
+        val accessToken = extole.getAccessToken()
+        if (accessToken.isNullOrBlank()) {
+            return headers
+        }
+        return headers.toMutableMap().apply { put("Authorization", "Bearer $accessToken") }
     }
 
     private fun afterShareAction(): () -> Unit = {

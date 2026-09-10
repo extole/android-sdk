@@ -2,6 +2,7 @@ package com.extole.android.sdk.impl
 
 import android.content.pm.PackageManager
 import android.util.Log
+import android.webkit.CookieManager
 import android.webkit.WebView
 import com.extole.android.sdk.Action
 import com.extole.android.sdk.Campaign
@@ -176,18 +177,41 @@ class ExtoleImpl(
     }
 
     override fun logout() {
-        clearAccessToken()
         clearZonesCache()
+        clearProgramCookies()
         createAccessToken()
+    }
+
+    private fun clearProgramCookies() {
+        val cookieManager = CookieManager.getInstance()
+        val programUrl = "https://$programDomain/"
+        val cookieNames = cookieManager.getCookie(programUrl)
+            ?.split(';')
+            ?.map { it.substringBefore('=').trim() }
+            ?.filter { it.isNotEmpty() }
+            ?: return
+        cookieNames.forEach { name ->
+            cookieManager.setCookie(programUrl, "$name=; Path=/; Max-Age=0")
+            cookieManager.setCookie(programUrl, "$name=; Path=/; Max-Age=0; Domain=$programDomain")
+        }
+        cookieManager.flush()
     }
 
     override suspend fun identify(identifier: String, data: Map<String, String>): Id<Event> {
         val identifyData = data.toMutableMap()
         identifyData["email"] = identifier
-        return sendEvent(IDENTIFY_EVENT_NAME, identifyData)
+        return switchIdentity(identifyData)
     }
 
     override suspend fun identifyJwt(jwt: String, data: Map<String, String>): Id<Event> {
+        return switchIdentity(data, jwt)
+    }
+
+    private suspend fun switchIdentity(
+        data: Map<String, String>,
+        jwt: String? = null
+    ): Id<Event> {
+        logout()
         return sendEvent(IDENTIFY_EVENT_NAME, data, jwt)
     }
 
@@ -311,11 +335,8 @@ class ExtoleImpl(
         accessToken?.let {
             this.accessToken = accessToken
             setCache(ACCESS_TOKEN_PREFERENCES_KEY, it)
+            tokenApi = AuthorizationEndpoints(programDomain, it, getHeaders())
         }
-    }
-
-    private fun clearAccessToken() {
-        setAccessToken("")
     }
 
     private fun clearZonesCache() {
