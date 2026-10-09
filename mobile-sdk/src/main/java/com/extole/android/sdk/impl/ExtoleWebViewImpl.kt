@@ -88,8 +88,7 @@ class ExtoleWebViewImpl(
                 errorResponse: WebResourceResponse?
             ) {
                 extole.getLogger().error(
-                    "Http error request (url=${request?.url}, " +
-                        "method=${request?.method}, requestHeaders=${request?.requestHeaders}), " +
+                    "Http error request (url=${request?.url}, method=${request?.method}), " +
                         "error: ${errorResponse?.reasonPhrase}"
                 )
                 super.onReceivedHttpError(view, request, errorResponse)

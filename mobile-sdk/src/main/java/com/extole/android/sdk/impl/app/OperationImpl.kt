@@ -21,7 +21,7 @@ class OperationImpl(
                     extole.getLogger().debug("Skipping ${it.getType()} because it is disabled")
                 }
             } catch (e: RestException) {
-                extole.getLogger().debug("Error executing action ${it.getTitle()}: ${e.message}", e)
+                extole.getLogger().debug("Error executing action %s: %s", it.getTitle(), e.message)
             }
         }
     }
