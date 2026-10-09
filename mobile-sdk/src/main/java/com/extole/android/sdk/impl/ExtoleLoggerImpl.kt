@@ -14,26 +14,26 @@ import java.util.concurrent.atomic.AtomicInteger
 class ExtoleLoggerImpl(private val logLevel: LogLevel = LogLevel.ERROR) : ExtoleLogger {
 
     override fun debug(message: String, vararg args: Any?) {
-        Logger.d(message, args)
+        Logger.d(message, *args)
     }
 
     override fun info(message: String, vararg args: Any?) {
-        Logger.i(message, args)
+        Logger.i(message, *args)
     }
 
     override fun warn(message: String, vararg args: Any?) {
-        Logger.w(message, args)
+        Logger.w(message, *args)
     }
 
     override fun error(message: String, vararg args: Any?) {
-        Logger.e(message, args)
+        Logger.e(message, *args)
     }
 
     override fun error(exception: Throwable, message: String, vararg args: Any?) {
         val shouldSuppressRemoteUpload =
             NetworkConnectivityErrorFilter.shouldSuppressRemoteUpload(exception)
         RemoteLogUploadContext.withSuppressedRemoteUpload(shouldSuppressRemoteUpload) {
-            Logger.e(exception, message, args)
+            Logger.e(exception, message, *args)
         }
     }
 
