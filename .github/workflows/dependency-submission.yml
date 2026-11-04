@@ -27,6 +27,9 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Remove the Maven settings that setup-java writes
+        run: rm ~/.m2/settings.xml
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v4
 
